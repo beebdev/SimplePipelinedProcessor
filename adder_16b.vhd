@@ -40,9 +40,10 @@ entity adder_16b is
 end adder_16b;
 
 architecture Behavioral of adder_16b is
-    signal results : STD_LOGIC_VECTOR(16 downto 0);
+    -- intermediate result with extra bit for carry
+    signal result : STD_LOGIC_VECTOR(16 downto 0);
 begin
-    results <= '0'&src_a + '0'&src_b;
-    sum <= results(15 downto 0);
-    carry_out <= results(16);
+    result <= '0'&src_a + '0'&src_b;
+    sum <= result(15 downto 0);
+    carry_out <= result(16);
 end Behavioral;
