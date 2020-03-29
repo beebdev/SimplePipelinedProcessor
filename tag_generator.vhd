@@ -36,8 +36,8 @@ entity tag_generator is
            D1 : in STD_LOGIC_VECTOR (7 downto 0);
            D2 : in STD_LOGIC_VECTOR (7 downto 0);
            D3 : in STD_LOGIC_VECTOR (7 downto 0);
-           control : in STD_LOGIC_VECTOR (24 downto 0)
-           tag_result : out STD_LOGIC_VECTOR (7 downto 0););
+           control : in STD_LOGIC_VECTOR (24 downto 0);
+           tag_result : out STD_LOGIC_VECTOR (7 downto 0));
 end tag_generator;
 
 architecture Behavioral of tag_generator is
