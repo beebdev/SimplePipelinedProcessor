@@ -41,6 +41,7 @@ end mux_2to1_1b;
 architecture Behavioral of mux_2to1_1b is
 
 begin
-
-
+    data_out <= data_a when mux_select = '0' else
+                data_b when mux_select = '1' else
+                'X';
 end Behavioral;
