@@ -21,6 +21,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -35,12 +36,13 @@ entity adder_16b is
     Port ( src_a : in STD_LOGIC_VECTOR (15 downto 0);
            src_b : in STD_LOGIC_VECTOR (15 downto 0);
            sum : out STD_LOGIC_VECTOR (15 downto 0);
-           carry_out : out STD_LOGIC_VECTOR (0 downto 0));
+           carry_out : out STD_LOGIC );
 end adder_16b;
 
 architecture Behavioral of adder_16b is
-
+    signal results : STD_LOGIC_VECTOR(16 downto 0);
 begin
-
-
+    results <= '0'&src_a + '0'&src_b;
+    sum <= results(15 downto 0);
+    carry_out <= results(16);
 end Behavioral;
