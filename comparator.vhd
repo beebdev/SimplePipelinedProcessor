@@ -39,7 +39,22 @@ end comparator;
 
 architecture Behavioral of comparator is
 
-begin
+--signal a,b : std_logic_vector(7 downto 0);
 
+begin
+	
+	--a <= "10000000";
+	--b <= "10000000";
+	
+	check_statement:
+	process (data_a,data_b)
+	begin
+		if data_a = data_b then
+			eq <= '1';
+		else
+			eq <=  '0';
+		end if;
+	end process;
+		
 
 end Behavioral;
