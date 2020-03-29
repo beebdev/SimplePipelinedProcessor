@@ -32,6 +32,7 @@ entity swapper is
            A_a : out STD_LOGIC_VECTOR(7 downto 0);
            A_b : out STD_LOGIC_VECTOR(7 downto 0) );
 end swapper;
+
 architecture Behavioral of swapper is
     signal sig_D_a : STD_LOGIC_VECTOR(7 downto 0);
     signal sig_D_b : STD_LOGIC_VECTOR(7 downto 0);
