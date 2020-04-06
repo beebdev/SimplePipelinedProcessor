@@ -41,7 +41,7 @@ entity tag_generator is
 end tag_generator;
 
 architecture Behavioral of tag_generator is
-
+    -- Components used: swapper, rotate_left_shift_8b
     component swapper is
     Port ( control : in STD_LOGIC_VECTOR(12 downto 0);
            D0 : in STD_LOGIC_VECTOR(7 downto 0);
@@ -54,28 +54,23 @@ architecture Behavioral of tag_generator is
            A3 : out STD_LOGIC_VECTOR(7 downto 0));
     end component;
 
-	 component rotate_left_shift_8b is
-		 Port ( A : in STD_LOGIC_VECTOR (7 downto 0);
-				  sft : in STD_LOGIC_VECTOR (2 downto 0);
-				  B : out STD_LOGIC_VECTOR (7 downto 0));
-	 end component;
-
-
-
-    
-    -- stage results and control signals
-    signal swap_control : STD_LOGIC_VECTOR(12 downto 0);
+    component rotate_left_shift_8b is
+    Port ( A : in STD_LOGIC_VECTOR (7 downto 0);
+           sft : in STD_LOGIC_VECTOR (2 downto 0);
+           B : out STD_LOGIC_VECTOR (7 downto 0));
+    end component;
+ 
+    -- Stage results and control signals
     signal r0, r1, r2, r3 : STD_LOGIC_VECTOR(2 downto 0);
     signal A0, A1, A2, A3 : STD_LOGIC_VECTOR(7 downto 0);
     signal B0, B1, B2, B3 : STD_LOGIC_VECTOR(7 downto 0);
     
-    -- component input buffer
+    -- Component input buffer
     signal swap_in_a, swap_in_b : STD_LOGIC_VECTOR(7 downto 0);
     signal swap_out_a, swap_out_b : STD_LOGIC_VECTOR(7 downto 0);
 
 begin
-    -- extract control signals from control
-    swap_control <= control(12 downto 0);
+    -- Extract control signals from control
     r0 <= control(15 downto 13);
     r1 <= control(18 downto 16);
     r2 <= control(21 downto 19);
@@ -83,7 +78,7 @@ begin
     
     -- swapper
     swap_p : swapper
-    port map( control => swap_control,
+    port map( control => control(12 downto 0),
               D0 => D0,
               D1 => D1,
               D2 => D2,
