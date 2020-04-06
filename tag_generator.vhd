@@ -51,6 +51,15 @@ architecture Behavioral of tag_generator is
            A_a : out STD_LOGIC_VECTOR(7 downto 0);
            A_b : out STD_LOGIC_VECTOR(7 downto 0) );
     end component;
+
+	 component rotate_left_shift_8b is
+		 Port ( A : in STD_LOGIC_VECTOR (7 downto 0);
+				  sft : in STD_LOGIC_VECTOR (2 downto 0);
+				  B : out STD_LOGIC_VECTOR (7 downto 0));
+	 end component;
+
+
+
     
     -- stage results and control signals
     signal sig_s : STD_LOGIC_VECTOR(2 downto 0);
@@ -100,7 +109,7 @@ begin
                 flag(3) := '0';
             when others =>
                 swap_in_a <= (others => 'X');
-                swap_out_a <= (others => 'X');
+                swap_out_a <= (others => 'X');			
         end case;
                 
         case sig_b2 is
@@ -126,15 +135,34 @@ begin
         end case;
         if (flag(0) = '1') then
             A0 <= D0;
+		  elsif(sig_b1 = "00")  then
+				A0 <= swap_out_a;
+		  elsif(sig_b2 = "00") then
+				A0 <= swap_out_b;
         end if;
+		  
         if (flag(1) = '1') then
             A1 <= D1;
+		  elsif(sig_b1 = "01")  then
+				A1 <= swap_out_a;
+		  elsif(sig_b2 = "01") then
+				A1 <= swap_out_b;
         end if;
-        if (flag(1) = '1') then
+
+        if (flag(2) = '1') then
             A2 <= D2;
+		  elsif(sig_b1 = "10")  then
+				A2 <= swap_out_a;
+		  elsif(sig_b2 = "10") then
+				A2 <= swap_out_b;
         end if;
-        if (flag(1) = '1') then
+
+        if (flag(3) = '1') then
             A3 <= D3;
+		  elsif(sig_b1 = "11")  then
+				A3 <= swap_out_a;
+		  elsif(sig_b2 = "11") then
+				A3 <= swap_out_b;
         end if;
     end process;
     swap_c : swapper
@@ -145,4 +173,33 @@ begin
              p2     => sig_p2,
              A_a    => swap_out_a,
              A_b    => swap_out_b);
+				 
+	---assume all swapped value is in A
+	
+	rotate_shift_3:rotate_left_shift_8b 
+	port map(A => A3,
+				sft => sig_r3,
+				B => B3); 
+
+	rotate_shift_2:rotate_left_shift_8b 
+	port map(A => A2,
+				sft => sig_r2,
+				B => B2); 
+
+
+	rotate_shift_1:rotate_left_shift_8b 
+	port map(A => A1,
+				sft => sig_r1,
+				B => B1); 
+
+	
+	rotate_shift_0:rotate_left_shift_8b 
+	port map(A => A0,
+				sft => sig_r0,
+				B => B0);
+	
+	tag_result <= B3 XOR B2 XOR B1 XOR B0;
+	
+	
+	
 end Behavioral;
