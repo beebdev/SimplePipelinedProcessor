@@ -43,13 +43,15 @@ end tag_generator;
 architecture Behavioral of tag_generator is
 
     component swapper is
-    Port ( D_a : in STD_LOGIC_VECTOR(7 downto 0);
-           D_b : in STD_LOGIC_VECTOR(7 downto 0);
-           s : in STD_LOGIC_VECTOR(2 downto 0);
-           p1 : in STD_LOGIC_VECTOR(2 downto 0);
-           p2 : in STD_LOGIC_VECTOR(2 downto 0);
-           A_a : out STD_LOGIC_VECTOR(7 downto 0);
-           A_b : out STD_LOGIC_VECTOR(7 downto 0) );
+    Port ( control : in STD_LOGIC_VECTOR(12 downto 0);
+           D0 : in STD_LOGIC_VECTOR(7 downto 0);
+           D1 : in STD_LOGIC_VECTOR(7 downto 0);
+           D2 : in STD_LOGIC_VECTOR(7 downto 0);
+           D3 : in STD_LOGIC_VECTOR(7 downto 0);
+           A0 : out STD_LOGIC_VECTOR(7 downto 0);
+           A1 : out STD_LOGIC_VECTOR(7 downto 0);
+           A2 : out STD_LOGIC_VECTOR(7 downto 0);
+           A3 : out STD_LOGIC_VECTOR(7 downto 0));
     end component;
 
 	 component rotate_left_shift_8b is
@@ -62,10 +64,8 @@ architecture Behavioral of tag_generator is
 
     
     -- stage results and control signals
-    signal sig_s : STD_LOGIC_VECTOR(2 downto 0);
-    signal sig_p1, sig_p2 : STD_LOGIC_VECTOR(2 downto 0);
-    signal sig_b1, sig_b2 : STD_LOGIC_VECTOR(1 downto 0);
-    signal sig_r0, sig_r1, sig_r2, sig_r3 : STD_LOGIC_VECTOR(2 downto 0);
+    signal swap_control : STD_LOGIC_VECTOR(12 downto 0);
+    signal r0, r1, r2, r3 : STD_LOGIC_VECTOR(2 downto 0);
     signal A0, A1, A2, A3 : STD_LOGIC_VECTOR(7 downto 0);
     signal B0, B1, B2, B3 : STD_LOGIC_VECTOR(7 downto 0);
     
@@ -75,131 +75,46 @@ architecture Behavioral of tag_generator is
 
 begin
     -- extract control signals from control
-    sig_s <= control(12 downto 10);
-    sig_p1 <= control(6 downto 4);
-    sig_p2 <= control(9 downto 7);
-    sig_b1 <= control(1 downto 0);
-    sig_b2 <= control(3 downto 2);
-    sig_r0 <= control(15 downto 13);
-    sig_r1 <= control(18 downto 16);
-    sig_r2 <= control(21 downto 19);
-    sig_r3 <= control(24 downto 22);
+    swap_control <= control(12 downto 0);
+    r0 <= control(15 downto 13);
+    r1 <= control(18 downto 16);
+    r2 <= control(21 downto 19);
+    r3 <= control(24 downto 22);
     
-    -- Logic to determine which to swap;
-    select_swap : process(sig_b1, sig_b2,
-                D0, D1, D2, D3, A0, A1, A2, A3) is
-        variable flag : std_logic_vector(3 downto 0) := "1111";
-    begin
-        case sig_b1 is
-            when "00" =>
-                swap_in_a <= D0;
-                swap_out_a <= A0;
-                flag(0) := '0';
-            when "01" =>
-                swap_in_a <= D1;
-                swap_out_a <= A1;
-                flag(1) := '0';
-            when "10" =>
-                swap_in_a <= D2;
-                swap_out_a <= A2;
-                flag(2) := '0';
-            when "11" =>
-                swap_in_a <= D3;
-                swap_out_a <= A3;
-                flag(3) := '0';
-            when others =>
-                swap_in_a <= (others => 'X');
-                swap_out_a <= (others => 'X');			
-        end case;
-                
-        case sig_b2 is
-            when "00" =>
-                swap_in_b <= D0;
-                swap_out_b <= A0;
-                flag(0) := '0';
-            when "01" =>
-                swap_in_b <= D1;
-                swap_out_b <= A1;
-                flag(1) := '0';
-            when "10" =>
-                swap_in_b <= D2;
-                swap_out_b <= A2;
-                flag(2) := '0';
-            when "11" =>
-                swap_in_b <= D3;
-                swap_out_b <= A3;
-                flag(3) := '0';
-            when others =>
-                swap_in_b <= (others => 'X');
-                swap_out_b <= (others => 'X');
-        end case;
-        if (flag(0) = '1') then
-            A0 <= D0;
-		  elsif(sig_b1 = "00")  then
-				A0 <= swap_out_a;
-		  elsif(sig_b2 = "00") then
-				A0 <= swap_out_b;
-        end if;
-		  
-        if (flag(1) = '1') then
-            A1 <= D1;
-		  elsif(sig_b1 = "01")  then
-				A1 <= swap_out_a;
-		  elsif(sig_b2 = "01") then
-				A1 <= swap_out_b;
-        end if;
-
-        if (flag(2) = '1') then
-            A2 <= D2;
-		  elsif(sig_b1 = "10")  then
-				A2 <= swap_out_a;
-		  elsif(sig_b2 = "10") then
-				A2 <= swap_out_b;
-        end if;
-
-        if (flag(3) = '1') then
-            A3 <= D3;
-		  elsif(sig_b1 = "11")  then
-				A3 <= swap_out_a;
-		  elsif(sig_b2 = "11") then
-				A3 <= swap_out_b;
-        end if;
-    end process;
-    swap_c : swapper
-    port map(D_a    => swap_in_a,
-             D_b    => swap_in_b,
-             s      => sig_s,
-             p1     => sig_p1,
-             p2     => sig_p2,
-             A_a    => swap_out_a,
-             A_b    => swap_out_b);
+    -- swapper
+    swap_p : swapper
+    port map( control => swap_control,
+              D0 => D0,
+              D1 => D1,
+              D2 => D2,
+              D3 => D3,
+              A0 => A0,
+              A1 => A1,
+              A2 => A2,
+              A3 => A3);
 				 
-	---assume all swapped value is in A
-	
-	rotate_shift_3:rotate_left_shift_8b 
-	port map(A => A3,
-				sft => sig_r3,
-				B => B3); 
+	-- Rotate left each byte by r#
+	rol_0 : rotate_left_shift_8b 
+	port map( A => A0,
+			  sft => r0,
+			  B => B0);
+			  
+    rol_1 : rotate_left_shift_8b 
+	port map( A => A1,
+			  sft => r1,
+			  B => B1);
 
-	rotate_shift_2:rotate_left_shift_8b 
-	port map(A => A2,
-				sft => sig_r2,
-				B => B2); 
+    rol_2 : rotate_left_shift_8b 
+	port map( A => A2,
+			  sft => r2,
+			  B => B2); 
 
+	rol_3 : rotate_left_shift_8b 
+	port map( A => A3,
+			  sft => r3,
+			  B => B3);
 
-	rotate_shift_1:rotate_left_shift_8b 
-	port map(A => A1,
-				sft => sig_r1,
-				B => B1); 
-
-	
-	rotate_shift_0:rotate_left_shift_8b 
-	port map(A => A0,
-				sft => sig_r0,
-				B => B0);
-	
+    -- XOR B to get tag_result			  
 	tag_result <= B3 XOR B2 XOR B1 XOR B0;
-	
-	
 	
 end Behavioral;
