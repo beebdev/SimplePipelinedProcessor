@@ -1,6 +1,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.STD_LOGIC_ARITH.ALL;
+--use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 entity swapper is
     Port ( control : in STD_LOGIC_VECTOR(12 downto 0);
@@ -37,11 +38,14 @@ begin
     s <= control(12 downto 10);
     
     -- initialise start end position
+	 process(control, a_s, b_s, size)
+	 begin
     size <= unsigned(control(12 downto 10));
     a_s <= unsigned(control(6 downto 4));
     a_e <= a_s + size - 1;
     b_s <= unsigned(control(9 downto 7));
     b_e <= b_s + size - 1;
+	 end process;
     
     -- determine which two to swap
     swap_determine : process (b1, b2, D0, D1, D2, D3, out_a, out_b)
@@ -95,7 +99,7 @@ begin
         out_b <= in_b;
         
         -- swap bits
-        out_a(conv_integer(a_e) downto conv_integer(a_s)) <= in_b(conv_integer(b_e) downto conv_integer(b_s));
-        out_b(conv_integer(b_e) downto conv_integer(b_s)) <= in_a(conv_integer(a_e) downto conv_integer(a_s));
+        out_a(to_integer(a_e) downto to_integer(a_s)) <= in_b(to_integer(b_e) downto to_integer(b_s));
+        out_b(to_integer(b_e) downto to_integer(b_s)) <= in_a(to_integer(a_e) downto to_integer(a_s));
     end process;
 end Behavioral;

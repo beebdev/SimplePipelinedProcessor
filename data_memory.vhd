@@ -36,14 +36,14 @@ entity data_memory is
     Port ( reset : in STD_LOGIC;
            clk : in STD_LOGIC;
            write_enable : in STD_LOGIC;
-           write_data : in STD_LOGIC_VECTOR (7 downto 0);
+           write_data : in STD_LOGIC_VECTOR (32 downto 0);
            addr_in : in STD_LOGIC_VECTOR (3 downto 0);
-           data_out : out STD_LOGIC_VECTOR (7 downto 0));
+           data_out : out STD_LOGIC_VECTOR (32 downto 0));
 end data_memory;
 
 architecture Behavioral of data_memory is
 
-type mem_array is array(0 to 7) of std_logic_vector(15 downto 0);
+type mem_array is array(0 to 15) of std_logic_vector(32 downto 0);
 signal sig_data_mem : mem_array;
 
 begin
@@ -60,22 +60,22 @@ begin
         
         if (reset = '1') then
             -- initial values of the data memory : reset to zero 
-            var_data_mem(0)  := "00000000";
-            var_data_mem(1)  := "00000000";
-            var_data_mem(2)  := "00000000";
-            var_data_mem(3)  := "00000000";
-            var_data_mem(4)  := "00000000";
-            var_data_mem(5)  := "00000000";
-            var_data_mem(6)  := "00000000";
-            var_data_mem(7)  := "00000000";
-            var_data_mem(8)  := "00000000";
-            var_data_mem(9)  := "00000000";
-            var_data_mem(10) := "00000000";
-            var_data_mem(11) := "00000000";
-            var_data_mem(12) := "00000000";
-            var_data_mem(13) := "00000000";
-            var_data_mem(14) := "00000000";
-            var_data_mem(15) := "00000000";
+            var_data_mem(0)  := (others => '0');
+            var_data_mem(1)  := (others => '0');
+            var_data_mem(2)  := (others => '0');
+            var_data_mem(3)  := (others => '0');
+            var_data_mem(4)  := (others => '0');
+            var_data_mem(5)  := (others => '0');
+            var_data_mem(6)  := (others => '0');
+            var_data_mem(7)  := (others => '0');
+            var_data_mem(8)  := (others => '0');
+            var_data_mem(9)  := (others => '0');
+            var_data_mem(10) := (others => '0');
+            var_data_mem(11) := (others => '0');
+            var_data_mem(12) := (others => '0');
+            var_data_mem(13) := (others => '0');
+            var_data_mem(14) := (others => '0');
+            var_data_mem(15) := (others => '0');
 
         elsif (falling_edge(clk) and write_enable = '1') then
             -- memory writes on the falling clock edge
