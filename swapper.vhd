@@ -1,6 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.NUMERIC_STD.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
 
 entity swapper is
     Port ( control : in STD_LOGIC_VECTOR(12 downto 0);
@@ -23,12 +23,11 @@ architecture Behavioral of swapper is
     -- swap buffer
     signal in_a, in_b : STD_LOGIC_VECTOR(7 downto 0);
     signal out_a, out_b : STD_LOGIC_VECTOR(7 downto 0);
-    signal temp : STD_LOGIC_VECTOR(7 downto 0) := (others => '0');
     
     -- start end position
-    signal a_s, a_e : integer;
-    signal b_s, b_e : integer;
-    signal size : integer;
+    signal a_s, a_e : unsigned(2 downto 0);
+    signal b_s, b_e : unsigned(2 downto 0);
+    signal size : unsigned(2 downto 0);
 begin
     -- extract signal from control
     b1 <= control(1 downto 0);
@@ -38,10 +37,10 @@ begin
     s <= control(12 downto 10);
     
     -- initialise start end position
-    size <= to_integer(unsigned(control(12 downto 10)));
-    a_s <= to_integer(unsigned(control(6 downto 4)));
+    size <= unsigned(control(12 downto 10));
+    a_s <= unsigned(control(6 downto 4));
     a_e <= a_s + size - 1;
-    b_s <= to_integer(unsigned(control(9 downto 7)));
+    b_s <= unsigned(control(9 downto 7));
     b_e <= b_s + size - 1;
     
     -- determine which two to swap
@@ -91,7 +90,12 @@ begin
     swap_process : process(in_a, in_b,
                             a_e, a_s, b_e, b_s)
     begin
-        out_a(a_e downto a_s) <= in_b(b_e downto b_s);
-        out_b(b_e downto b_s) <= in_a(a_e downto a_s);
+        -- initialise out_a and out_b
+        out_a <= in_a;
+        out_b <= in_b;
+        
+        -- swap bits
+        out_a(conv_integer(a_e) downto conv_integer(a_s)) <= in_b(conv_integer(b_e) downto conv_integer(b_s));
+        out_b(conv_integer(b_e) downto conv_integer(b_s)) <= in_a(conv_integer(a_e) downto conv_integer(a_s));
     end process;
 end Behavioral;
