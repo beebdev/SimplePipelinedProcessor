@@ -40,13 +40,13 @@ entity register_file is
            read_register_b : in STD_LOGIC_VECTOR (3 downto 0);
            write_enable : in STD_LOGIC;
            write_register : in STD_LOGIC_VECTOR (3 downto 0);
-           write_data : in STD_LOGIC_VECTOR (15 downto 0);
-           read_data_a : out STD_LOGIC_VECTOR (15 downto 0);
-           read_data_b : out STD_LOGIC_VECTOR (15 downto 0));
+           write_data : in STD_LOGIC_VECTOR (31 downto 0);
+           read_data_a : out STD_LOGIC_VECTOR (31 downto 0);
+           read_data_b : out STD_LOGIC_VECTOR (31 downto 0));
 end register_file;
 
 architecture Behavioral of register_file is
-    type reg_file is array(0 to 15) of std_logic_vector(15 downto 0);
+    type reg_file is array(0 to 31) of std_logic_vector(31 downto 0);
     signal sig_regfile : reg_file;
 begin
     mem_process : process (reset, clk, read_register_a, read_register_b,
