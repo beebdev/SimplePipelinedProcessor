@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tag_generator_TB_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="tag_generator_TB" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="668666fs"></ZoomStartTime>
+      <ZoomEndTime time="886267fs"></ZoomEndTime>
+      <Cursor1Time time="1000000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="235"></NameColumnWidth>
+      <ValueColumnWidth column_width="213"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="5" />
+   <wvobject fp_name="group38" type="group">
+      <obj_property name="label">D</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tag_generator_TB/D0" type="array">
+         <obj_property name="ElementShortName">D0[7:0]</obj_property>
+         <obj_property name="ObjectShortName">D0[7:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tag_generator_TB/D1" type="array">
+         <obj_property name="ElementShortName">D1[7:0]</obj_property>
+         <obj_property name="ObjectShortName">D1[7:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tag_generator_TB/D2" type="array">
+         <obj_property name="ElementShortName">D2[7:0]</obj_property>
+         <obj_property name="ObjectShortName">D2[7:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tag_generator_TB/D3" type="array">
+         <obj_property name="ElementShortName">D3[7:0]</obj_property>
+         <obj_property name="ObjectShortName">D3[7:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group43" type="group">
+      <obj_property name="label">A</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tag_generator_TB/UTT/A0" type="array">
+         <obj_property name="ElementShortName">A0[7:0]</obj_property>
+         <obj_property name="ObjectShortName">A0[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tag_generator_TB/UTT/A1" type="array">
+         <obj_property name="ElementShortName">A1[7:0]</obj_property>
+         <obj_property name="ObjectShortName">A1[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tag_generator_TB/UTT/A2" type="array">
+         <obj_property name="ElementShortName">A2[7:0]</obj_property>
+         <obj_property name="ObjectShortName">A2[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tag_generator_TB/UTT/A3" type="array">
+         <obj_property name="ElementShortName">A3[7:0]</obj_property>
+         <obj_property name="ObjectShortName">A3[7:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/tag_generator_TB/tag_result" type="array">
+      <obj_property name="ElementShortName">tag_result[7:0]</obj_property>
+      <obj_property name="ObjectShortName">tag_result[7:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="group27" type="group">
+      <obj_property name="label">swap_control</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tag_generator_TB/UTT/swap_p/b1" type="array">
+         <obj_property name="ElementShortName">b1[1:0]</obj_property>
+         <obj_property name="ObjectShortName">b1[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tag_generator_TB/UTT/swap_p/b2" type="array">
+         <obj_property name="ElementShortName">b2[1:0]</obj_property>
+         <obj_property name="ObjectShortName">b2[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tag_generator_TB/UTT/swap_p/p1" type="array">
+         <obj_property name="ElementShortName">p1[2:0]</obj_property>
+         <obj_property name="ObjectShortName">p1[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tag_generator_TB/UTT/swap_p/p2" type="array">
+         <obj_property name="ElementShortName">p2[2:0]</obj_property>
+         <obj_property name="ObjectShortName">p2[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tag_generator_TB/UTT/swap_p/s" type="array">
+         <obj_property name="ElementShortName">s[2:0]</obj_property>
+         <obj_property name="ObjectShortName">s[2:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group37" type="group">
+      <obj_property name="label">swap_data</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tag_generator_TB/UTT/swap_p/in_a" type="array">
+         <obj_property name="ElementShortName">in_a[7:0]</obj_property>
+         <obj_property name="ObjectShortName">in_a[7:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tag_generator_TB/UTT/swap_p/in_b" type="array">
+         <obj_property name="ElementShortName">in_b[7:0]</obj_property>
+         <obj_property name="ObjectShortName">in_b[7:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tag_generator_TB/UTT/swap_p/out_a" type="array">
+         <obj_property name="ElementShortName">out_a[7:0]</obj_property>
+         <obj_property name="ObjectShortName">out_a[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tag_generator_TB/UTT/swap_p/out_b" type="array">
+         <obj_property name="ElementShortName">out_b[7:0]</obj_property>
+         <obj_property name="ObjectShortName">out_b[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tag_generator_TB/UTT/swap_p/a_s" type="array">
+         <obj_property name="ElementShortName">a_s[2:0]</obj_property>
+         <obj_property name="ObjectShortName">a_s[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tag_generator_TB/UTT/swap_p/a_e" type="array">
+         <obj_property name="ElementShortName">a_e[2:0]</obj_property>
+         <obj_property name="ObjectShortName">a_e[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tag_generator_TB/UTT/swap_p/b_s" type="array">
+         <obj_property name="ElementShortName">b_s[2:0]</obj_property>
+         <obj_property name="ObjectShortName">b_s[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tag_generator_TB/UTT/swap_p/b_e" type="array">
+         <obj_property name="ElementShortName">b_e[2:0]</obj_property>
+         <obj_property name="ObjectShortName">b_e[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tag_generator_TB/UTT/swap_p/size" type="array">
+         <obj_property name="ElementShortName">size[2:0]</obj_property>
+         <obj_property name="ObjectShortName">size[2:0]</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>
