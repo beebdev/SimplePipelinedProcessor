@@ -8,10 +8,7 @@ end tag_generator_TB;
 
 architecture Behavioral of tag_generator_TB is
     component tag_generator is
-    Port ( D0 : in STD_LOGIC_VECTOR (7 downto 0);
-           D1 : in STD_LOGIC_VECTOR (7 downto 0);
-           D2 : in STD_LOGIC_VECTOR (7 downto 0);
-           D3 : in STD_LOGIC_VECTOR (7 downto 0);
+    Port ( D_in : in STD_LOGIC_VECTOR (31 downto 0);
            control : in STD_LOGIC_VECTOR (24 downto 0);
            tag_result : out STD_LOGIC_VECTOR (7 downto 0));
     end component;
@@ -35,17 +32,12 @@ architecture Behavioral of tag_generator_TB is
     
 begin
     UTT : tag_generator
-        port map ( D0 => D0,
-                   D1 => D1,
-                   D2 => D2,
-                   D3 => D3,
+        port map ( D_in => (D3&D2&D1&D0),
                    control => control,
                    tag_result => tag_result );
 
     stim_proc : process
     begin
         wait for 10ns;
---        control <= control + 1;
---        wait for 10ns;
     end process;
 end Behavioral;
