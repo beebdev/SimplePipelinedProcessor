@@ -32,8 +32,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity stage_reg_4b is
     Port ( clk : in  STD_LOGIC;
            reset : in  STD_LOGIC;
-           D : in  STD_LOGIC_VECTOR (4 downto 0);
-           Q : out  STD_LOGIC_VECTOR (4 downto 0));
+           D : in  STD_LOGIC_VECTOR (3 downto 0);
+           Q : out  STD_LOGIC_VECTOR (3 downto 0));
 end stage_reg_4b;
 
 architecture Behavioral of stage_reg_4b is
