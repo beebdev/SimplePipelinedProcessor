@@ -38,10 +38,10 @@ begin
     s <= control(12 downto 10);
     
     -- initialise start end position
-    size <= to_integer(unsigned(s));
-    a_s <= to_integer(unsigned(p1));
+    size <= to_integer(unsigned(control(12 downto 10)));
+    a_s <= to_integer(unsigned(control(6 downto 4)));
     a_e <= a_s + size - 1;
-    b_s <= to_integer(unsigned(p2));
+    b_s <= to_integer(unsigned(control(9 downto 7)));
     b_e <= b_s + size - 1;
     
     -- determine which two to swap
@@ -88,12 +88,10 @@ begin
     end process;
     
     -- swap process
-    swap_process : process(in_a, in_b, temp,
-                            a_e, a_s, b_e, b_s, size)
+    swap_process : process(in_a, in_b,
+                            a_e, a_s, b_e, b_s)
     begin
-        -- swap using a third buffer
-        temp(size-1 downto 0) <= in_a(a_e downto a_s);
-        in_a(a_e downto a_s) <= in_b(b_e downto b_s);
-        in_b(b_e downto b_s) <= temp(size-1 downto 0);
+        out_a(a_e downto a_s) <= in_b(b_e downto b_s);
+        out_b(b_e downto b_s) <= in_a(a_e downto a_s);
     end process;
 end Behavioral;
