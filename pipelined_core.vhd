@@ -58,9 +58,11 @@ architecture Behavioral of pipelined_core is
                read_data_b : out STD_LOGIC_VECTOR (31 downto 0));
     end component;
     
-    component sign_extend_4to32 is
-        Port ( data_in : in STD_LOGIC_VECTOR (3 downto 0);
-               data_out : out STD_LOGIC_VECTOR (31 downto 0));
+    component sign_extend_NtoM is
+        generic (N : integer;
+                 M : integer );
+        Port ( data_in : in STD_LOGIC_VECTOR (N downto 0);
+               data_out : out STD_LOGIC_VECTOR (M downto 0));
     end component;
     
     component pipe_id_ex is
@@ -92,20 +94,29 @@ architecture Behavioral of pipelined_core is
     component tag_generator is
         Port ( D_in : in STD_LOGIC_VECTOR (31 downto 0);
                control : in STD_LOGIC_VECTOR (24 downto 0);
-               tag_result : out STD_LOGIC_VECTOR (7 downto 0));
+               tag_result : out STD_LOGIC_VECTOR (31 downto 0));
     end component;
     
     component comparator is
         Port ( data_a : in STD_LOGIC_VECTOR (7 downto 0);
                data_b : in STD_LOGIC_VECTOR (7 downto 0);
-               eq : out STD_LOGIC);
+               eq : out STD_LOGIC_VECTOR(31 downto 0));
     end component;
     
-    component adder_16b is
-        Port ( src_a : in STD_LOGIC_VECTOR (15 downto 0);
-               src_b : in STD_LOGIC_VECTOR (15 downto 0);
-               sum : out STD_LOGIC_VECTOR (15 downto 0);
-               carry_out : out STD_LOGIC );
+    component adder_Nb is
+    generic (N : integer);
+    Port ( src_a : in STD_LOGIC_VECTOR (N-1 downto 0);
+           src_b : in STD_LOGIC_VECTOR (N-1 downto 0);
+           sum : out STD_LOGIC_VECTOR (N-1 downto 0);
+           carry_out : out STD_LOGIC );
+    end component;
+    
+    component mux_2to1_Nb is
+    generic (N : integer);
+    Port ( mux_select : in STD_LOGIC;
+           data_a : in STD_LOGIC_VECTOR (N-1 downto 0);
+           data_b : in STD_LOGIC_VECTOR (N-1 downto 0);
+           data_out : out STD_LOGIC_VECTOR (N-1 downto 0));
     end component;
     
     component pipe_ex_mem is
@@ -169,10 +180,11 @@ architecture Behavioral of pipelined_core is
     signal sig_IDEX_rd              : STD_LOGIC_VECTOR(3 downto 0);
     
     ---------EX signals--------------------------------------
-    signal sig_comp_result          : STD_LOGIC;
+    signal sig_comp_result          : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_tag_result           : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_alusrc_b             : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_alu_result           : STD_LOGIC_VECTOR(31 downto 0);
+    signal sig_carry_out            : STD_LOGIC;
     signal sig_reg_write_dst        : STD_LOGIC_VECTOR(3 downto 0);
     signal sig_EXMEM_reg_write      : STD_LOGIC;
     signal sig_EXMEM_write_dsrc     : STD_LOGIC_VECTOR(1 downto 0);
@@ -242,36 +254,62 @@ begin
                read_data_a      => sig_read_data_a,
                read_data_b      => sig_read_data_b );
  
-    sign_extend : sign_extend_4to32
+    sign_ext_4to32  : sign_extend_NtoM
+    generic map (N      => 4,
+                 M      => 32 )
     port map ( data_in  => sig_insn(3 downto 0),
                data_out => sig_sign_ext_offset );
             
     pipe_IDEX : pipe_id_ex
     Port map ( reset => reset,
-           clk => clk,
-           reg_write => sig_reg_write,
-           write_dsrc => sig_write_dsrc,
-           mem_read => sig_mem_read,
-           reg_dst => sig_reg_dst,
-           alu_src => sig_alu_src,
-           read_data_a => sig_read_data_a,
-           read_data_b => sig_read_data_b,
-           sign_ext_offset => sig_sign_ext_offset,
-           rt => sig_insn(7 downto 4),
-           rd => sig_insn(3 downto 0),
-           IDEX_reg_write => sig_IDEX_reg_write,
-           IDEX_write_dsrc => sig_IDEX_write_dsrc,
-           IDEX_mem_read => sig_IDEX_mem_read,
-           IDEX_reg_dst => sig_IDEX_reg_dst,
-           IDEX_alu_src => sig_IDEX_alu_src,
-           IDEX_read_data_a => sig_IDEX_read_data_a,
-           IDEX_read_data_b => sig_IDEX_read_data_b,
-           IDEX_sign_ext_offset => sig_IDEX_sign_ext_offset,
-           IDEX_rt => sig_IDEX_rt,
-           IDEX_rd => sig_IDEX_rd );
+               clk => clk,
+               reg_write => sig_reg_write,
+               write_dsrc => sig_write_dsrc,
+               mem_read => sig_mem_read,
+               reg_dst => sig_reg_dst,
+               alu_src => sig_alu_src,
+               read_data_a => sig_read_data_a,
+               read_data_b => sig_read_data_b,
+               sign_ext_offset => sig_sign_ext_offset,
+               rt => sig_insn(7 downto 4),
+               rd => sig_insn(3 downto 0),
+               IDEX_reg_write => sig_IDEX_reg_write,
+               IDEX_write_dsrc => sig_IDEX_write_dsrc,
+               IDEX_mem_read => sig_IDEX_mem_read,
+               IDEX_reg_dst => sig_IDEX_reg_dst,
+               IDEX_alu_src => sig_IDEX_alu_src,
+               IDEX_read_data_a => sig_IDEX_read_data_a,
+               IDEX_read_data_b => sig_IDEX_read_data_b,
+               IDEX_sign_ext_offset => sig_IDEX_sign_ext_offset,
+               IDEX_rt => sig_IDEX_rt,
+               IDEX_rd => sig_IDEX_rd );
  
-	 -------INSTRUCTION DECODER-----------
+    ----------Execution-----------
+    compare : comparator
+    port map ( data_a => sig_IDEX_read_data_a,
+               data_b => sig_IDEX_read_data_b,
+               eq => sig_comp_result);
+               
+    tag_gen : tag_generator
+    port map ( D_in => sig_IDEX_read_data_a,
+               control => sig_IDEX_read_data_b(24 downto 0),
+               tag_result => sig_tag_result);
 
+    mux_2to1_32b : mux_2to1_Nb
+    generic map (N => 32)
+    port map ( mux_select   => sig_IDEX_alu_src,
+               data_a       => sig_IDEX_sign_ext_offset,
+               data_b       => sig_IDEX_read_data_b,
+               data_out     => sig_alusrc_b );
+                   
+    adder_32b : adder_Nb
+    generic map (N => 32)
+    port map ( src_a        => sig_IDEX_read_data_a,
+               src_b        => sig_alusrc_b,
+               sum          => sig_alu_result,
+               carry_out    => sig_carry_out );
+               
+    
 
 
 end Behavioral;
