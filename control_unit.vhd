@@ -60,7 +60,7 @@ begin
 					'1';
 	 
 	 -- 1 for load word case
-	 mem_read <= '1' when opcode = OP_LOAD sles
+	 mem_read <= '1' when opcode = OP_LOAD else
 					 '0';
 					 
 	 
