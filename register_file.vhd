@@ -63,14 +63,14 @@ begin
         
         if (reset = '1') then
             -- initial values of the registers - reset to zeroes
-            var_regfile := (others => X"0000");
+            var_regfile := (others => X"00000000");
         elsif (falling_edge(clk) and write_enable = '1') then
             -- register write on the falling clock edge
             var_regfile(var_write_addr) := write_data;
         end if;
         
         -- enforces value zero for register $0
-        var_regfile(0) := X"0000";
+        var_regfile(0) := X"00000000";
         
         -- continuous read of the registers at location read_register_a
         -- and read_register_b

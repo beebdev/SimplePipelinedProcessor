@@ -27,13 +27,13 @@ end comparator_TB;
 
 architecture Behavioral of comparator_TB is
     component comparator is
-    Port ( data_a : in STD_LOGIC_VECTOR (7 downto 0);
-           data_b : in STD_LOGIC_VECTOR (7 downto 0);
+    Port ( data_a : in STD_LOGIC_VECTOR (31 downto 0);
+           data_b : in STD_LOGIC_VECTOR (31 downto 0);
            eq : out STD_LOGIC);
     end component;
     
-    signal data_a : STD_LOGIC_VECTOR(7 downto 0);
-    signal data_b : STD_LOGIC_VECTOR(7 downto 0);
+    signal data_a : STD_LOGIC_VECTOR(31 downto 0);
+    signal data_b : STD_LOGIC_VECTOR(31 downto 0);
     signal eq : STD_LOGIC;
     
 begin

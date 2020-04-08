@@ -19,7 +19,7 @@ architecture Behavioral of pipelined_core is
         Port ( reset    : in STD_LOGIC;
                clk      : in STD_LOGIC;
                addr_in  : in STD_LOGIC_VECTOR (3 downto 0);
-               insn_out : out STD_LOGIC_VECTOR (31 downto 0) );
+               insn_out : out STD_LOGIC_VECTOR (15 downto 0) );
     end component;
     
     component adder_4b is
@@ -97,11 +97,11 @@ architecture Behavioral of pipelined_core is
                tag_result : out STD_LOGIC_VECTOR (31 downto 0));
     end component;
     
-    component comparator is
-        Port ( data_a : in STD_LOGIC_VECTOR (7 downto 0);
-               data_b : in STD_LOGIC_VECTOR (7 downto 0);
-               eq : out STD_LOGIC_VECTOR(31 downto 0));
-    end component;
+	component comparator is
+		 Port ( data_a : in STD_LOGIC_VECTOR (31 downto 0);
+				  data_b : in STD_LOGIC_VECTOR (31 downto 0);
+				  eq : out STD_LOGIC_VECTOR(31 downto 0));
+	end component;
     
     component mux_2to1_Nb is
         generic (N : integer);
@@ -140,10 +140,10 @@ architecture Behavioral of pipelined_core is
 
     ---------MEM Components---------------------------------
     component data_memory is
-        Port ( reset : in STD_LOGIC;
-               clk : in STD_LOGIC;
-               addr_in : in STD_LOGIC_VECTOR (3 downto 0);
-               data_out : out STD_LOGIC_VECTOR (31 downto 0));
+		 Port ( reset : in STD_LOGIC;
+				  clk : in STD_LOGIC;
+				  addr_in : in STD_LOGIC_VECTOR (31 downto 0);
+				  data_out : out STD_LOGIC_VECTOR (31 downto 0));
     end component;
     
     component pipe_mem_wb is
@@ -172,8 +172,28 @@ architecture Behavioral of pipelined_core is
                data_c : in STD_LOGIC_VECTOR (31 downto 0);
                data_out : out STD_LOGIC_VECTOR (31 downto 0));
     end component;
-    
-    
+
+	--miscelullous-------------------------------------------    
+	component sign_extend_4to32 is
+		 Port ( data_in : in  STD_LOGIC_VECTOR (3 downto 0);
+				  data_out : out  STD_LOGIC_VECTOR (31 downto 0));
+	end component;
+
+	component mux_2to1_32b is
+		 Port ( mux_select : in  STD_LOGIC;
+				  data_a : in  STD_LOGIC_VECTOR (31 downto 0);
+				  data_b : in  STD_LOGIC_VECTOR (31 downto 0);
+				  data_out : out  STD_LOGIC_VECTOR (31 downto 0));
+	end component;
+
+	component mux_2to1_4b is
+		 Port ( mux_select : in STD_LOGIC;
+				  data_a : in STD_LOGIC_VECTOR (3 downto 0);
+				  data_b : in STD_LOGIC_VECTOR (3 downto 0);
+				  data_out : out STD_LOGIC_VECTOR (3 downto 0));
+	end component;
+
+
     ---------IF signals--------------------------------------
     signal sig_curr_pc              : STD_LOGIC_VECTOR(3 downto 0);
     signal sig_next_pc              : STD_LOGIC_VECTOR(3 downto 0);
@@ -277,11 +297,17 @@ begin
                read_data_a      => sig_read_data_a,
                read_data_b      => sig_read_data_b );
  
-    sign_ext_4to32  : sign_extend_NtoM
-    generic map (N      => 4,
-                 M      => 32 )
-    port map ( data_in  => sig_insn(3 downto 0),
-               data_out => sig_sign_ext_offset );
+--- i currently dun have sign_extend_NtoM , but i i have sign extend 4 to 32
+--    sign_ext_4to32  : sign_extend_NtoM
+--    generic map (N      => 3,
+--                 M      => 32 )
+--    port map ( data_in  => sig_insn(3 downto 0),
+--               data_out => sig_sign_ext_offset );
+
+	 sign_ext : sign_extend_4to32 
+		 port map ( data_in  => sig_insn(3 downto 0),
+						data_out => sig_sign_ext_offset );
+	 
             
     pipe_IDEX : pipe_id_ex
     Port map ( reset => reset,
@@ -317,14 +343,43 @@ begin
     port map ( D_in => sig_IDEX_read_data_a,
                control => sig_IDEX_read_data_b(24 downto 0),
                tag_result => sig_tag_result);
-               
-    mux_2to1_32b : mux_2to1_Nb
-    generic map (N => 32)
+					
+					
+----------------COMMMENTED OUT BECAUSE I DONT HAVE THE COMPONENT-------------------               
+--    mux_2to1_32b : mux_2to1_Nb
+--    generic map (N => 32)
+--    port map ( mux_select => sig_IDEX_alu_src,
+--               data_a => sig_IDEX_sign_ext_offset,
+--               data_b => sig_IDEX_read_data_b,
+--               data_out => sig_alusrc_b );
+
+--    mux_2to1_4b : mux_2to1_Nb
+--    generic map (N => 4)
+--    port map ( mux_select => sig_IDEX_reg_dst,
+--               data_a => sig_IDEX_rt,
+--               data_b => sig_IDEX_rd,
+--               data_out => sig_reg_write_dst );
+
+----------------------------------------------------------------------------------               
+    mux32b : mux_2to1_32b
     port map ( mux_select => sig_IDEX_alu_src,
                data_a => sig_IDEX_sign_ext_offset,
                data_b => sig_IDEX_read_data_b,
                data_out => sig_alusrc_b );
-               
+
+
+    mux4b : mux_2to1_4b
+    --generic map (N => 4)
+    port map ( mux_select => sig_IDEX_reg_dst,
+               data_a => sig_IDEX_rt,
+               data_b => sig_IDEX_rd,
+               data_out => sig_reg_write_dst );
+
+
+
+------------------------------------------------------------------------------------
+
+
     adder_32b : adder_Nb
     generic map (N => 32)
     port map ( src_a => sig_IDEX_read_data_a,
@@ -332,12 +387,10 @@ begin
                sum => sig_alu_result,
                carry_out => sig_carry_out );
 
-    mux_2to1_4b : mux_2to1_Nb
-    generic map (N => 4)
-    port map ( mux_select => sig_IDEX_reg_dst,
-               data_a => sig_IDEX_rt,
-               data_b => sig_IDEX_rd,
-               data_out => sig_reg_write_dst );
+
+
+	
+
                
     pipe_EXMEM : pipe_ex_mem
     port map ( reset => reset,
