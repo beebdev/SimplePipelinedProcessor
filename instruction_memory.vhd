@@ -55,7 +55,7 @@ begin
         if (reset = '1') then
 
 
-            var_insn_mem(0)   := X"0050";
+            var_insn_mem(0)   := X"0000";
             var_insn_mem(1)   := X"0000";
             var_insn_mem(2)   := X"0000";
             var_insn_mem(3)   := X"0000";

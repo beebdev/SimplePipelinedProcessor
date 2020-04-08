@@ -33,10 +33,10 @@ entity pipe_mem_wb is
     Port ( clk : in  STD_LOGIC;
            reset : in  STD_LOGIC;
            tag_result_in : in  STD_LOGIC_VECTOR (31 downto 0);
-           tag_result_out : out  STD_LOGIC_VECTOR (31 downto 0);
            data_in : in  STD_LOGIC_VECTOR (31 downto 0);
-           data_out : out  STD_LOGIC_VECTOR (31 downto 0);
            alu_result_in : in  STD_LOGIC_VECTOR (31 downto 0);
+           tag_result_out : out  STD_LOGIC_VECTOR (31 downto 0);
+           data_out : out  STD_LOGIC_VECTOR (31 downto 0);
            alu_result_out : out  STD_LOGIC_VECTOR (31 downto 0));
 end pipe_mem_wb;
 

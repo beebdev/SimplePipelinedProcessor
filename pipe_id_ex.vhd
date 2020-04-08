@@ -1,115 +1,58 @@
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date:    21:20:43 04/07/2020 
--- Design Name: 
--- Module Name:    pipe_id_ex - Behavioral 
--- Project Name: 
--- Target Devices: 
--- Tool versions: 
--- Description: 
---
--- Dependencies: 
---
--- Revision: 
--- Revision 0.01 - File Created
--- Additional Comments: 
---
-----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx primitives in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
-
 entity pipe_id_ex is
-    Port ( clk : in  STD_LOGIC;
-           reset : in  STD_LOGIC;
-           pc_in : in  STD_LOGIC_VECTOR (3 downto 0);
-           pc_out : out  STD_LOGIC_VECTOR (3 downto 0);
-           data_a_in : in  STD_LOGIC_VECTOR (31 downto 0);
-           data_b_in : in  STD_LOGIC_VECTOR (31 downto 0);
-           instruct_32b_in : in  STD_LOGIC_VECTOR (31 downto 0);
-           instruct_32b_out : out  STD_LOGIC_VECTOR (31 downto 0);
-           address_a_in : in  STD_LOGIC_VECTOR (3 downto 0);
-           address_a_out : out  STD_LOGIC_VECTOR (3 downto 0);
-           address_b_in : in  STD_LOGIC_VECTOR (3 downto 0);
-           address_b_out : out  STD_LOGIC_VECTOR (3 downto 0);
-           data_a_out : out  STD_LOGIC_VECTOR (31 downto 0);
-           data_b_out : out  STD_LOGIC_VECTOR (31 downto 0));
+    Port ( reset : in STD_LOGIC;
+           clk : in STD_LOGIC;
+           reg_write : in STD_LOGIC;
+           write_dsrc : in STD_LOGIC_VECTOR(1 downto 0);
+           mem_read : in STD_LOGIC;
+           reg_dst : in STD_LOGIC;
+           alu_src : in STD_LOGIC;
+           read_data_a : in STD_LOGIC_VECTOR(31 downto 0);
+           read_data_b : in STD_LOGIC_VECTOR(31 downto 0);
+           sign_ext_offset : in STD_LOGIC_VECTOR(31 downto 0);
+           rt : in STD_LOGIC_VECTOR(3 downto 0);
+           rd : in STD_LOGIC_VECTOR(3 downto 0);
+           IDEX_reg_write : out STD_LOGIC;
+           IDEX_write_dsrc : out STD_LOGIC_VECTOR(1 downto 0);
+           IDEX_mem_read : out STD_LOGIC;
+           IDEX_reg_dst : out STD_LOGIC;
+           IDEX_alu_src : out STD_LOGIC;
+           IDEX_read_data_a : out STD_LOGIC_VECTOR(31 downto 0);
+           IDEX_read_data_b : out STD_LOGIC_VECTOR(31 downto 0);
+           IDEX_sign_ext_offset : out STD_LOGIC_VECTOR(31 downto 0);
+           IDEX_rt : out STD_LOGIC_VECTOR(3 downto 0);
+           IDEX_rd : out STD_LOGIC_VECTOR(3 downto 0) );
 end pipe_id_ex;
 
 architecture Behavioral of pipe_id_ex is
-	component stage_reg_4b is
-		 Port ( clk : in  STD_LOGIC;
-				  reset : in  STD_LOGIC;
-				  D : in  STD_LOGIC_VECTOR (3 downto 0);
-				  Q : out  STD_LOGIC_VECTOR (3 downto 0));
-	end component;
-	component stage_reg_32b is
-		 Port ( clk : in  STD_LOGIC;
-				  reset : in  STD_LOGIC;
-				  D : in  STD_LOGIC_VECTOR (31 downto 0);
-				  Q : out  STD_LOGIC_VECTOR (31 downto 0));
-	end component;	
-
 begin
-	--preserve pc
-	piping_pc : stage_reg_4b port map 
-		(clk => clk,
-		reset => reset, 
-		D => pc_in,
-		Q => pc_out
-		);
-		
-	--preserve data_a
-		store_data_a : stage_reg_32b port map 
-		(clk => clk,
-		reset => reset,
-		D => data_a_in ,
-		Q => data_a_out 
-		);
-	
-	--preserve data_b
-		store_data_b : stage_reg_32b port map 
-		(clk => clk,
-		reset => reset,
-		D => data_b_in ,
-		Q => data_b_out 
-		);
-	
-	--preserve 32 bit instruction
-	 store_full_instruct : stage_reg_32b port map
-		(clk => clk,
-		reset => reset,
-		D => instruct_32b_in ,
-		Q => instruct_32b_out 
-		);
-
-	--preserve 4 bit instruction for address in reg file
-	 store_address_a : stage_reg_4b port map
-		(clk => clk,
-		reset => reset,
-		D => address_a_in ,
-		Q => address_a_out 
-		);
-
-	--preserve 4 bit instruction for address in reg file
-	 store_address_b : stage_reg_4b port map
-		(clk => clk,
-		reset => reset,
-		D => address_b_in ,
-		Q => address_b_out
-		);	  
-		
-	
-
+    store_proc : process (reset, clk) is
+    begin
+        if (reset = '1') then
+            IDEX_reg_write <= '0';
+            IDEX_write_dsrc <= (others => '0');
+            IDEX_mem_read <= '0';
+            IDEX_reg_dst <= '0';
+            IDEX_alu_src <= '0';
+            IDEX_read_data_a <= (others => '0');
+            IDEX_read_data_b <= (others => '0');
+            IDEX_sign_ext_offset <= (others => '0');
+            IDEX_rt <= (others => '0');
+            IDEX_rd <= (others => '0');
+        elsif (rising_edge(clk)) then
+            IDEX_reg_write <= reg_write;
+            IDEX_write_dsrc <= write_dsrc;
+            IDEX_mem_read <= mem_read;
+            IDEX_reg_dst <= reg_dst;
+            IDEX_alu_src <= alu_src;
+            IDEX_read_data_a <= read_data_a;
+            IDEX_read_data_b <= read_data_b;
+            IDEX_sign_ext_offset <= sign_ext_offset;
+            IDEX_rt <= rt;
+            IDEX_rd <= rd;
+        end if;
+    end process;
 end Behavioral;
 

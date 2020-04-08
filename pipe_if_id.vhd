@@ -30,47 +30,22 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity pipe_if_id is
-    Port ( clk : in  STD_LOGIC;
-           reset : in  STD_LOGIC;
-           instruction_in : in  STD_LOGIC_VECTOR (15 downto 0);
-           pc_in : in  STD_LOGIC_VECTOR (3 downto 0);
-           instruction_out : out  STD_LOGIC_VECTOR (15 downto 0);
-           pc_out : out  STD_LOGIC_VECTOR (3 downto 0));
+    Port ( reset        : in  STD_LOGIC;
+           clk          : in  STD_LOGIC;
+           inst_in      : in  STD_LOGIC_VECTOR (15 downto 0);
+           inst_out     : out  STD_LOGIC_VECTOR (15 downto 0) );
 end pipe_if_id;
 
 architecture Behavioral of pipe_if_id is
-	component stage_reg_4b is
-		 Port ( clk : in  STD_LOGIC;
-				  reset : in  STD_LOGIC;
-				  D : in  STD_LOGIC_VECTOR (3 downto 0);
-				  Q : out  STD_LOGIC_VECTOR (3 downto 0));
-	end component;
-
-	component stage_reg_16b is
-		 Port ( clk : in  STD_LOGIC;
-				  reset : in  STD_LOGIC;
-				  D : in  STD_LOGIC_VECTOR (15 downto 0);
-				  Q : out  STD_LOGIC_VECTOR (15 downto 0));
-	end component;
-
-
 begin
-	--preserving pc  
-	store_pc : stage_reg_4b port map 
-		(clk => clk,
-		reset => reset,
-		D => pc_in ,
-		Q => pc_out  
-		);
-	
-	--preserve instruction
-	store_instruction : stage_reg_16b port map 
-		(clk => clk,
-		reset => reset,
-		D => instruction_in,
-		Q => instruction_out 
-		);
-
+    process (reset, clk) is
+    begin
+        if (reset = '1') then
+            inst_out <= (others => '0');
+        elsif (rising_edge(clk)) then
+            inst_out <= inst_in;
+        end if;
+    end process;
 
 end Behavioral;
 

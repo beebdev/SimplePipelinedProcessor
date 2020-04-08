@@ -1,40 +1,11 @@
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date: 29.03.2020 14:44:45
--- Design Name: 
--- Module Name: tag_generator - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
-----------------------------------------------------------------------------------
-
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
-
 entity tag_generator is
     Port ( D_in : in STD_LOGIC_VECTOR (31 downto 0);
            control : in STD_LOGIC_VECTOR (24 downto 0);
-           tag_result : out STD_LOGIC_VECTOR (7 downto 0));
+           tag_result : out STD_LOGIC_VECTOR (31 downto 0));
 end tag_generator;
 
 architecture Behavioral of tag_generator is
@@ -106,7 +77,8 @@ begin
 			  sft => r3,
 			  B => B3);
 
-    -- XOR B to get tag_result			  
-	tag_result <= B3 XOR B2 XOR B1 XOR B0;
+    -- XOR B to get tag_result
+    tag_result(31 downto 8) <= (others => '0');			  
+	tag_result(7 downto 0) <= B3 XOR B2 XOR B1 XOR B0;
 	
 end Behavioral;

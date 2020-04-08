@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 29.03.2020 13:18:57
+-- Create Date: 08.04.2020 19:12:11
 -- Design Name: 
--- Module Name: control_unit - Behavioral
+-- Module Name: mux_NtoM - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -31,16 +31,12 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity control_unit is
-    Port ( opcode : in STD_LOGIC_VECTOR (3 downto 0);
-           reg_write : out STD_LOGIC;
-           write_dsrc : out STD_LOGIC_VECTOR(1 downto 0);
-           mem_read : out STD_LOGIC;
-           reg_dst : out STD_LOGIC;
-           alu_src : out STD_LOGIC );
-end control_unit;
+entity mux_NtoM is
+--  Port ( );
+end mux_NtoM;
 
-architecture Behavioral of control_unit is
+architecture Behavioral of mux_NtoM is
+
 begin
 
 
