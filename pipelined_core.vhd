@@ -58,9 +58,9 @@ architecture Behavioral of pipelined_core is
                read_data_b : out STD_LOGIC_VECTOR (31 downto 0));
     end component;
     
-    component sign_extend_4to16 is
+    component sign_extend_4to32 is
         Port ( data_in : in STD_LOGIC_VECTOR (3 downto 0);
-               data_out : out STD_LOGIC_VECTOR (15 downto 0));
+               data_out : out STD_LOGIC_VECTOR (31 downto 0));
     end component;
     
     component pipe_id_ex is
@@ -156,7 +156,7 @@ architecture Behavioral of pipelined_core is
     signal sig_alu_src              : STD_LOGIC;
     signal sig_read_data_a          : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_read_data_b          : STD_LOGIC_VECTOR(31 downto 0);
-    signal sig_sign_ext_offset      : STD_LOGIC_VECTOR(15 downto 0);
+    signal sig_sign_ext_offset      : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_IDEX_reg_write       : STD_LOGIC;
     signal sig_IDEX_write_dsrc      : STD_LOGIC_VECTOR(1 downto 0);
     signal sig_IDEX_mem_read        : STD_LOGIC;
@@ -242,7 +242,7 @@ begin
                read_data_a      => sig_read_data_a,
                read_data_b      => sig_read_data_b );
  
-    sign_extend : sign_extend_4to16
+    sign_extend : sign_extend_4to32
     port map ( data_in  => sig_insn(3 downto 0),
                data_out => sig_sign_ext_offset );
             

@@ -31,8 +31,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity pipe_ex_mem is
     Port ( clk : in  STD_LOGIC;
-			  reset : in  STD_LOGIC;
-			  tag_result_in : in  STD_LOGIC_VECTOR (31 downto 0);
+		   reset : in  STD_LOGIC;
+		   tag_result_in : in  STD_LOGIC_VECTOR (31 downto 0);
            alu_result_in : in  STD_LOGIC_VECTOR (31 downto 0);
            reg_address_in : in  STD_LOGIC_VECTOR (31 downto 0);
            tag_result_out : out  STD_LOGIC_VECTOR (31 downto 0);
