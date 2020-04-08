@@ -62,9 +62,9 @@ begin
 	 -- 1 for load word case
 	 mem_read <= '1' when opcode = OP_LOAD else
 					 '0';
-					 
-	 
-	 mem_to_reg <= "00" when opcode = OP_CMP else
+					  
+	  
+	 write_dsrc <= "00" when opcode = OP_CMP else
 						"01" when opcode = OP_TAG else
 						"10" when opcode = OP_LOAD else
 						"11"; 
