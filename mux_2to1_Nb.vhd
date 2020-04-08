@@ -15,7 +15,7 @@ begin
     begin
         data_out <= data_a when mux_select = '0' else
                     data_b when mux_select = '1' else
-                    'X';
+                    (others => 'X');
     end process;
 
 end Behavioral;

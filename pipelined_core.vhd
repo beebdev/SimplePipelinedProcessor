@@ -103,53 +103,76 @@ architecture Behavioral of pipelined_core is
                eq : out STD_LOGIC_VECTOR(31 downto 0));
     end component;
     
-    component adder_Nb is
-    generic (N : integer);
-    Port ( src_a : in STD_LOGIC_VECTOR (N-1 downto 0);
-           src_b : in STD_LOGIC_VECTOR (N-1 downto 0);
-           sum : out STD_LOGIC_VECTOR (N-1 downto 0);
-           carry_out : out STD_LOGIC );
-    end component;
-    
     component mux_2to1_Nb is
-    generic (N : integer);
-    Port ( mux_select : in STD_LOGIC;
-           data_a : in STD_LOGIC_VECTOR (N-1 downto 0);
-           data_b : in STD_LOGIC_VECTOR (N-1 downto 0);
-           data_out : out STD_LOGIC_VECTOR (N-1 downto 0));
+        generic (N : integer);
+        Port ( mux_select : in STD_LOGIC;
+               data_a : in STD_LOGIC_VECTOR (N-1 downto 0);
+               data_b : in STD_LOGIC_VECTOR (N-1 downto 0);
+               data_out : out STD_LOGIC_VECTOR (N-1 downto 0));
+    end component;
+
+    component adder_Nb is
+        generic (N : integer);
+        Port ( src_a : in STD_LOGIC_VECTOR (N-1 downto 0);
+               src_b : in STD_LOGIC_VECTOR (N-1 downto 0);
+               sum : out STD_LOGIC_VECTOR (N-1 downto 0);
+               carry_out : out STD_LOGIC );
     end component;
     
     component pipe_ex_mem is
-        Port ( clk : in  STD_LOGIC;
-               reset : in  STD_LOGIC;
-               tag_result_in : in  STD_LOGIC_VECTOR (31 downto 0);
-               alu_result_in : in  STD_LOGIC_VECTOR (31 downto 0);
-               reg_address_in : in  STD_LOGIC_VECTOR (31 downto 0);
-               tag_result_out : out  STD_LOGIC_VECTOR (31 downto 0);
-               alu_result_out : out  STD_LOGIC_VECTOR (31 downto 0);
-               reg_address_out : out  STD_LOGIC_VECTOR (31 downto 0));
+        Port ( reset : in  STD_LOGIC;
+               clk : in  STD_LOGIC;
+               IDEX_reg_write : in STD_LOGIC;
+               IDEX_write_dsrc : in STD_LOGIC_VECTOR(1 downto 0);
+               IDEX_mem_read : in STD_LOGIC;
+               comp_result : in STD_LOGIC_VECTOR(31 downto 0);
+               tag_result : in STD_LOGIC_VECTOR(31 downto 0);
+               alu_result : in STD_LOGIC_VECTOR(31 downto 0);
+               reg_write_dst : in STD_LOGIC_VECTOR(3 downto 0);
+               EXMEM_reg_write : out STD_LOGIC;
+               EXMEM_write_dsrc : out STD_LOGIC_VECTOR(1 downto 0);
+               EXMEM_mem_read : out STD_LOGIC;
+               EXMEM_comp_result : out STD_LOGIC_VECTOR(31 downto 0);
+               EXMEM_tag_result : out STD_LOGIC_VECTOR(31 downto 0);
+               EXMEM_alu_result : out STD_LOGIC_VECTOR(31 downto 0);
+               EXMEM_reg_write_dst : out STD_LOGIC_VECTOR(3 downto 0) );
     end component;
 
     ---------MEM Components---------------------------------
     component data_memory is
         Port ( reset : in STD_LOGIC;
                clk : in STD_LOGIC;
-               write_enable : in STD_LOGIC;
-               write_data : in STD_LOGIC_VECTOR (32 downto 0);
                addr_in : in STD_LOGIC_VECTOR (3 downto 0);
-               data_out : out STD_LOGIC_VECTOR (32 downto 0));
+               data_out : out STD_LOGIC_VECTOR (31 downto 0));
     end component;
     
     component pipe_mem_wb is
-        Port ( clk : in  STD_LOGIC;
-               reset : in  STD_LOGIC;
-               tag_result_in : in  STD_LOGIC_VECTOR (31 downto 0);
-               data_in : in  STD_LOGIC_VECTOR (31 downto 0);
-               alu_result_in : in  STD_LOGIC_VECTOR (31 downto 0);
-               tag_result_out : out  STD_LOGIC_VECTOR (31 downto 0);
-               data_out : out  STD_LOGIC_VECTOR (31 downto 0);
-               alu_result_out : out  STD_LOGIC_VECTOR (31 downto 0));
+        Port ( reset : in  STD_LOGIC;
+               clk : in  STD_LOGIC;
+               EXMEM_reg_write : in STD_LOGIC;
+               EXMEM_write_dsrc : in STD_LOGIC_VECTOR(1 downto 0);
+               EXMEM_comp_result : in STD_LOGIC_VECTOR(31 downto 0);
+               EXMEM_tag_result : in STD_LOGIC_VECTOR(31 downto 0);
+               dmem_read_data : in STD_LOGIC_VECTOR(31 downto 0);
+               EXMEM_alu_result : in STD_LOGIC_VECTOR(31 downto 0);
+               EXMEM_reg_write_dst : in STD_LOGIC_VECTOR(3 downto 0);
+               WB_reg_write : out STD_LOGIC;
+               WB_write_dsrc : out STD_LOGIC_VECTOR(1 downto 0);
+               MEMWB_comp_result : out STD_LOGIC_VECTOR(31 downto 0);
+               MEMWB_tag_result : out STD_LOGIC_VECTOR(31 downto 0);
+               MEMWB_dmem_read_data : out STD_LOGIC_VECTOR(31 downto 0);
+               MEMWB_alu_result : out STD_LOGIC_VECTOR(31 downto 0);
+               WB_reg_write_dst : out STD_LOGIC_VECTOR(3 downto 0) );
     end component;
+    
+    component mux_3to1_32b is
+        Port ( mux_select : in STD_LOGIC_VECTOR (1 downto 0);
+               data_a : in STD_LOGIC_VECTOR (31 downto 0);
+               data_b : in STD_LOGIC_VECTOR (31 downto 0);
+               data_c : in STD_LOGIC_VECTOR (31 downto 0);
+               data_out : out STD_LOGIC_VECTOR (31 downto 0));
+    end component;
+    
     
     ---------IF signals--------------------------------------
     signal sig_curr_pc              : STD_LOGIC_VECTOR(3 downto 0);
@@ -189,7 +212,7 @@ architecture Behavioral of pipelined_core is
     signal sig_EXMEM_reg_write      : STD_LOGIC;
     signal sig_EXMEM_write_dsrc     : STD_LOGIC_VECTOR(1 downto 0);
     signal sig_EXMEM_mem_read       : STD_LOGIC;
-    signal sig_EXMEM_comp_result    : STD_LOGIC;
+    signal sig_EXMEM_comp_result    : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_EXMEM_tag_result     : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_EXMEM_alu_result     : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_EXMEM_reg_write_dst  : STD_LOGIC_VECTOR(3 downto 0);
@@ -294,23 +317,76 @@ begin
     port map ( D_in => sig_IDEX_read_data_a,
                control => sig_IDEX_read_data_b(24 downto 0),
                tag_result => sig_tag_result);
-
+               
     mux_2to1_32b : mux_2to1_Nb
     generic map (N => 32)
-    port map ( mux_select   => sig_IDEX_alu_src,
-               data_a       => sig_IDEX_sign_ext_offset,
-               data_b       => sig_IDEX_read_data_b,
-               data_out     => sig_alusrc_b );
-                   
+    port map ( mux_select => sig_IDEX_alu_src,
+               data_a => sig_IDEX_sign_ext_offset,
+               data_b => sig_IDEX_read_data_b,
+               data_out => sig_alusrc_b );
+               
     adder_32b : adder_Nb
     generic map (N => 32)
-    port map ( src_a        => sig_IDEX_read_data_a,
-               src_b        => sig_alusrc_b,
-               sum          => sig_alu_result,
-               carry_out    => sig_carry_out );
+    port map ( src_a => sig_IDEX_read_data_a,
+               src_b => sig_alusrc_b,
+               sum => sig_alu_result,
+               carry_out => sig_carry_out );
+
+    mux_2to1_4b : mux_2to1_Nb
+    generic map (N => 4)
+    port map ( mux_select => sig_IDEX_reg_dst,
+               data_a => sig_IDEX_rt,
+               data_b => sig_IDEX_rd,
+               data_out => sig_reg_write_dst );
                
+    pipe_EXMEM : pipe_ex_mem
+    port map ( reset => reset,
+               clk => clk,
+               IDEX_reg_write => sig_IDEX_reg_write,
+               IDEX_write_dsrc => sig_IDEX_write_dsrc,
+               IDEX_mem_read => sig_IDEX_mem_read,
+               comp_result => sig_comp_result,
+               tag_result => sig_tag_result,
+               alu_result => sig_alu_result,
+               reg_write_dst => sig_reg_write_dst,
+               EXMEM_reg_write => sig_EXMEM_reg_write,
+               EXMEM_write_dsrc => sig_EXMEM_write_dsrc,
+               EXMEM_mem_read => sig_EXMEM_mem_read,
+               EXMEM_comp_result => sig_EXMEM_comp_result,
+               EXMEM_tag_result => sig_EXMEM_tag_result,
+               EXMEM_alu_result => sig_EXMEM_alu_result,
+               EXMEM_reg_write_dst => sig_EXMEM_reg_write_dst );
+             
+    ----------Memory Access-----------
+    data_mem : data_memory
+    port map ( reset => reset,
+               clk => clk,
+               addr_in => sig_EXMEM_alu_result,
+               data_out => sig_dmem_read_data );
+   
+    pipe_MEMWB : pipe_mem_wb
+    port map ( reset => reset,
+               clk => clk,
+               EXMEM_reg_write => sig_EXMEM_reg_write,
+               EXMEM_write_dsrc => sig_EXMEM_write_dsrc,
+               EXMEM_comp_result => sig_EXMEM_comp_result,
+               EXMEM_tag_result => sig_EXMEM_tag_result,
+               dmem_read_data => sig_dmem_read_data,
+               EXMEM_alu_result => sig_EXMEM_alu_result,
+               EXMEM_reg_write_dst => sig_EXMEM_reg_write_dst,
+               WB_reg_write => sig_WB_reg_write,
+               WB_write_dsrc => sig_WB_write_dsrc,
+               MEMWB_comp_result => sig_MEMWB_comp_result,
+               MEMWB_tag_result => sig_MEMWB_tag_result,
+               MEMWB_dmem_read_data => sig_MEMWB_dmem_read_data,
+               MEMWB_alu_result => sig_MEMWB_alu_result,
+               WB_reg_write_dst => sig_WB_reg_write_dst );
+
+    wb_data : mux_3to1_32b
+    port map ( mux_select => sig_WB_write_dsrc,
+               data_a => sig_MEMWB_comp_result,
+               data_b => sig_MEMWB_tag_result,
+               data_c => sig_MEMWB_dmem_read_data,
+               data_out => sig_WB_data);
     
-
-
-
 end Behavioral;
