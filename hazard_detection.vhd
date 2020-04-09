@@ -34,23 +34,26 @@ entity hazard_detection is
            IDEX_rt : in  STD_LOGIC_VECTOR (3 downto 0);
            IFID_rs : in  STD_LOGIC_VECTOR (3 downto 0);--11 to 8
            IFID_rt : in  STD_LOGIC_VECTOR (3 downto 0);--7 to 4
+			  if_id_write : out STD_LOGIC;
+			  pc_write : out STD_LOGIC;
            stall : out  STD_LOGIC);
 end hazard_detection;
 
 architecture Behavioral of hazard_detection is
-    --if (ID/EX.MemRead and
-    -- ((ID/EX.RegisterRt = IF/ID.RegisterRs) or
-    -- (ID/EX.RegisterRt = IF/ID.RegisterRt)))
-    -- stall the pipeline
+
 begin
 
 	process(IDEX_write_dsrc, IDEX_rt, IFID_rs, IFID_rt)
 	begin
-		if (IDEX_write_dsrc = "10")
+		if (IDEX_write_dsrc = "10") 
                 and ((IDEX_rt = IFID_rs) or (IDEX_rt = IFID_rt)) then 
 			stall <= '1';
+			pc_write <= '1';
+			if_id_write <= '1';
 		else
 			stall <= '0';
+			pc_write <= '0';
+			if_id_write <= '0';
 		end if;
 	end process;
 	
