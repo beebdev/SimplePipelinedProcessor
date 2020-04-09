@@ -16,10 +16,11 @@ end pipelined_core;
 architecture Behavioral of pipelined_core is
     ---------IF Components----------------------------------
     component program_counter is
-        Port ( reset    : in STD_LOGIC;
-               clk      : in STD_LOGIC;
-               addr_in  : in STD_LOGIC_VECTOR (3 downto 0);
-               addr_out : out STD_LOGIC_VECTOR (3 downto 0));
+		 Port ( reset    : in STD_LOGIC;
+				  clk      : in STD_LOGIC;
+				  pcwrite  : in STD_LOGIC;
+				  addr_in  : in STD_LOGIC_VECTOR (3 downto 0);
+				  addr_out : out STD_LOGIC_VECTOR (3 downto 0));
     end component;
      
     component instruction_memory is
@@ -37,12 +38,23 @@ architecture Behavioral of pipelined_core is
     end component;
    
     component pipe_if_id is
-        Port ( reset        : in  STD_LOGIC;
-               clk          : in  STD_LOGIC;
-               inst_in      : in  STD_LOGIC_VECTOR (15 downto 0);
-               inst_out     : out  STD_LOGIC_VECTOR (15 downto 0) );
+		 Port ( reset        : in  STD_LOGIC;
+				  clk          : in  STD_LOGIC;
+					if_id_write : in STD_LOGIC;
+				  inst_in      : in  STD_LOGIC_VECTOR (15 downto 0);
+				  inst_out     : out  STD_LOGIC_VECTOR (15 downto 0) );
     end component;
 
+	 component hazard_detection is
+		 Port ( IDEX_write_dsrc : in  STD_LOGIC_VECTOR(1 downto 0);
+				  IDEX_rt : in  STD_LOGIC_VECTOR (3 downto 0);
+				  IFID_rs : in  STD_LOGIC_VECTOR (3 downto 0);--11 to 8
+				  IFID_rt : in  STD_LOGIC_VECTOR (3 downto 0);--7 to 4
+				  if_id_write : out STD_LOGIC;
+				  pc_write : out STD_LOGIC;
+				  stall : out  STD_LOGIC);
+	 end component;
+	 
     ---------ID Components----------------------------------
     component control_unit is
         Port ( opcode       : in STD_LOGIC_VECTOR (3 downto 0);
@@ -170,7 +182,19 @@ architecture Behavioral of pipelined_core is
                data_out     : out STD_LOGIC_VECTOR (31 downto 0));
     end component;
     
-    
+	component mux_2to1_1b is
+		 Port ( mux_select   : in STD_LOGIC;
+				  data_a       : in STD_LOGIC;
+				  data_b       : in STD_LOGIC;
+				  data_out     : out STD_LOGIC);
+	end component;
+
+	component mux_2to1_2b is
+		 Port ( mux_select : in  STD_LOGIC;
+				  data_a : in  STD_LOGIC_VECTOR (1 downto 0);
+				  data_b : in  STD_LOGIC_VECTOR (1 downto 0);
+				  data_out : out  STD_LOGIC_VECTOR (1 downto 0));
+	end component;  
     ---------IF signals--------------------------------------
     signal sig_curr_pc              : STD_LOGIC_VECTOR(3 downto 0);
     signal sig_next_pc              : STD_LOGIC_VECTOR(3 downto 0);
@@ -178,6 +202,8 @@ architecture Behavioral of pipelined_core is
     signal sig_one_4b               : STD_LOGIC_VECTOR(3 downto 0);
     signal sig_insn                 : STD_LOGIC_VECTOR(15 downto 0);
     signal sig_ifid_insn            : STD_LOGIC_VECTOR(15 downto 0);
+	 signal sig_pcwrite              : STD_LOGIC;
+	 signal sig_if_id_write          : STD_LOGIC;
     
     ---------ID signals--------------------------------------
     signal sig_reg_write            : STD_LOGIC;
@@ -194,8 +220,11 @@ architecture Behavioral of pipelined_core is
     signal sig_IDEX_sign_ext_offset : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_IDEX_rt              : STD_LOGIC_VECTOR(3 downto 0);
     signal sig_IDEX_rd              : STD_LOGIC_VECTOR(3 downto 0);
-    signal sig_IDEX_rs              : STD_LOGIC_VECTOR(3 downto 0);      
-
+    signal sig_IDEX_rs              : STD_LOGIC_VECTOR(3 downto 0);    
+	 signal sig_stall						: STD_LOGIC; 
+	 signal lo_1b							: STD_LOGIC;
+	 signal lo_2b							: STD_LOGIC_VECTOR(1 downto 0);
+	 
     ---------EX signals--------------------------------------
     signal sig_comp_result          : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_tag_result           : STD_LOGIC_VECTOR(31 downto 0);
@@ -225,10 +254,13 @@ begin
 
 	-------INSTRUCTION FETCHING-----------
     sig_one_4b <= "0001";
+	 lo_1b <= '0';
+	 lo_2b <= "00";
 
     pc : program_counter
     port map ( reset    => reset,
                clk      => clk,
+					pcwrite  => sig_pcwrite,
                addr_in  => sig_next_pc,
                addr_out => sig_curr_pc );
 
@@ -247,6 +279,7 @@ begin
     pipe_IFID : pipe_if_id
     port map ( reset    => reset,
                clk      => clk,
+					if_id_write => sig_if_id_write,
                inst_in  => sig_insn,
                inst_out => sig_ifid_insn );
                
@@ -293,6 +326,9 @@ begin
                IDEX_rs              => sig_IDEX_rs,
                IDEX_rt              => sig_IDEX_rt,
                IDEX_rd              => sig_IDEX_rd );
+					
+				
+			
  
     ----------Execution-----------
     compare : comparator
@@ -366,11 +402,34 @@ begin
                data_out => sig_WB_data);
                
     -----------------Hazard detection---------------------
-    
-    
-    
-    
-    
+    hazard_detection_unit : hazard_detection 
+    port map ( IDEX_write_dsrc => sig_IDEX_write_dsrc,
+				  IDEX_rt => sig_IDEX_rt,
+				  IFID_rs => sig_insn(11 downto 8),
+				  IFID_rt => sig_insn(7 downto 4),
+				  if_id_write => sig_if_id_write,
+				  pc_write => sig_pcwrite,
+				  stall => sig_stall);   
+	 -------control signal		  
+	 mux_stall_reg_write : mux_2to1_1b
+	 port map (mux_select => sig_stall,
+				  data_a => sig_reg_write,
+				  data_b => lo_1b,
+				  data_out => sig_reg_write);
+				  
+	 mux_stall_write_dsrc_1 : mux_2to1_2b
+	 port map (mux_select => sig_stall,
+				  data_a => sig_write_dsrc,
+				  data_b => lo_2b,
+				  data_out => sig_write_dsrc);
+
+	 mux_stall_reg_dst : mux_2to1_1b
+	 port map (mux_select => sig_stall,
+				  data_a => sig_reg_dst,
+				  data_b => lo_1b,
+				  data_out => sig_reg_dst);
+
+				 
     ------------------------------------------------------
     
 end Behavioral;
