@@ -24,16 +24,16 @@ architecture Behavioral of control_unit is
 begin
 
 	 reg_dst   <= '0' when (opcode = OP_CMP 
-	                      or opcode = OP_TAG) else
-			      '1';
+	                        or opcode = OP_TAG) else
+	              '1';
 	 
 	 reg_write <= '1' when (opcode = OP_CMP
 	                        or opcode = OP_TAG 
 	                        or opcode = OP_LOAD) else
-				  '0';
+                  '0';
 					
 	 alu_src   <= '0' when opcode = OP_LOAD else
-                  '1';
+	              '1';
 	 
 	 write_dsrc <= "00" when opcode = OP_CMP else
                    "01" when opcode = OP_TAG else
