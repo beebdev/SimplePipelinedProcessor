@@ -364,5 +364,13 @@ begin
                data_b => sig_MEMWB_tag_result,
                data_c => sig_MEMWB_dmem_read_data,
                data_out => sig_WB_data);
+               
+    -----------------Hazard detection---------------------
+    
+    
+    
+    
+    
+    ------------------------------------------------------
     
 end Behavioral;
