@@ -13,9 +13,7 @@ entity pipe_id_ex is
            clk                  : in STD_LOGIC;
            reg_write            : in STD_LOGIC;
            write_dsrc           : in STD_LOGIC_VECTOR(1 downto 0);
-           mem_read             : in STD_LOGIC;
            reg_dst              : in STD_LOGIC;
-           alu_src              : in STD_LOGIC;
            read_data_a          : in STD_LOGIC_VECTOR(31 downto 0);
            read_data_b          : in STD_LOGIC_VECTOR(31 downto 0);
            sign_ext_offset      : in STD_LOGIC_VECTOR(31 downto 0);
@@ -23,9 +21,7 @@ entity pipe_id_ex is
            rd                   : in STD_LOGIC_VECTOR(3 downto 0);
            IDEX_reg_write       : out STD_LOGIC;
            IDEX_write_dsrc      : out STD_LOGIC_VECTOR(1 downto 0);
-           IDEX_mem_read        : out STD_LOGIC;
            IDEX_reg_dst         : out STD_LOGIC;
-           IDEX_alu_src         : out STD_LOGIC;
            IDEX_read_data_a     : out STD_LOGIC_VECTOR(31 downto 0);
            IDEX_read_data_b     : out STD_LOGIC_VECTOR(31 downto 0);
            IDEX_sign_ext_offset : out STD_LOGIC_VECTOR(31 downto 0);
@@ -41,9 +37,7 @@ begin
             -- clear IDEX stage register when reset = '1'
             IDEX_reg_write <= '0';
             IDEX_write_dsrc <= (others => '0');
-            IDEX_mem_read <= '0';
             IDEX_reg_dst <= '0';
-            IDEX_alu_src <= '0';
             IDEX_read_data_a <= (others => '0');
             IDEX_read_data_b <= (others => '0');
             IDEX_sign_ext_offset <= (others => '0');
@@ -53,9 +47,7 @@ begin
             -- update IDEX stage register when rising edge
             IDEX_reg_write <= reg_write;
             IDEX_write_dsrc <= write_dsrc;
-            IDEX_mem_read <= mem_read;
             IDEX_reg_dst <= reg_dst;
-            IDEX_alu_src <= alu_src;
             IDEX_read_data_a <= read_data_a;
             IDEX_read_data_b <= read_data_b;
             IDEX_sign_ext_offset <= sign_ext_offset;

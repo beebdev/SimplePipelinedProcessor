@@ -18,15 +18,15 @@ architecture Behavioral of pipelined_core is
     component program_counter is
         Port ( reset    : in STD_LOGIC;
                clk      : in STD_LOGIC;
-               addr_in  : in STD_LOGIC_VECTOR (15 downto 0);
-               addr_out : out STD_LOGIC_VECTOR (15 downto 0));
+               addr_in  : in STD_LOGIC_VECTOR (3 downto 0);
+               addr_out : out STD_LOGIC_VECTOR (3 downto 0));
     end component;
     
     component instruction_memory is
         Port ( reset    : in STD_LOGIC;
                clk      : in STD_LOGIC;
                addr_in  : in STD_LOGIC_VECTOR (3 downto 0);
-               insn_out : out STD_LOGIC_VECTOR (31 downto 0));
+               insn_out : out STD_LOGIC_VECTOR (15 downto 0));
     end component;
     
     component adder_4b is
@@ -48,9 +48,7 @@ architecture Behavioral of pipelined_core is
         Port ( opcode       : in STD_LOGIC_VECTOR (3 downto 0);
                reg_write    : out STD_LOGIC;
                write_dsrc   : out STD_LOGIC_VECTOR(1 downto 0);
-               mem_read     : out STD_LOGIC;
-               reg_dst      : out STD_LOGIC;
-               alu_src      : out STD_LOGIC );
+               reg_dst      : out STD_LOGIC );
     end component;
     
     component register_file is
@@ -75,9 +73,7 @@ architecture Behavioral of pipelined_core is
                clk                  : in STD_LOGIC;
                reg_write            : in STD_LOGIC;
                write_dsrc           : in STD_LOGIC_VECTOR(1 downto 0);
-               mem_read             : in STD_LOGIC;
                reg_dst              : in STD_LOGIC;
-               alu_src              : in STD_LOGIC;
                read_data_a          : in STD_LOGIC_VECTOR(31 downto 0);
                read_data_b          : in STD_LOGIC_VECTOR(31 downto 0);
                sign_ext_offset      : in STD_LOGIC_VECTOR(31 downto 0);
@@ -85,9 +81,7 @@ architecture Behavioral of pipelined_core is
                rd                   : in STD_LOGIC_VECTOR(3 downto 0);
                IDEX_reg_write       : out STD_LOGIC;
                IDEX_write_dsrc      : out STD_LOGIC_VECTOR(1 downto 0);
-               IDEX_mem_read        : out STD_LOGIC;
                IDEX_reg_dst         : out STD_LOGIC;
-               IDEX_alu_src         : out STD_LOGIC;
                IDEX_read_data_a     : out STD_LOGIC_VECTOR(31 downto 0);
                IDEX_read_data_b     : out STD_LOGIC_VECTOR(31 downto 0);
                IDEX_sign_ext_offset : out STD_LOGIC_VECTOR(31 downto 0);
@@ -128,14 +122,12 @@ architecture Behavioral of pipelined_core is
                clk                  : in  STD_LOGIC;
                IDEX_reg_write       : in STD_LOGIC;
                IDEX_write_dsrc      : in STD_LOGIC_VECTOR(1 downto 0);
-               IDEX_mem_read        : in STD_LOGIC;
                comp_result          : in STD_LOGIC_VECTOR(31 downto 0);
                tag_result           : in STD_LOGIC_VECTOR(31 downto 0);
                alu_result           : in STD_LOGIC_VECTOR(31 downto 0);
                reg_write_dst        : in STD_LOGIC_VECTOR(3 downto 0);
                EXMEM_reg_write      : out STD_LOGIC;
                EXMEM_write_dsrc     : out STD_LOGIC_VECTOR(1 downto 0);
-               EXMEM_mem_read       : out STD_LOGIC;
                EXMEM_comp_result    : out STD_LOGIC_VECTOR(31 downto 0);
                EXMEM_tag_result     : out STD_LOGIC_VECTOR(31 downto 0);
                EXMEM_alu_result     : out STD_LOGIC_VECTOR(31 downto 0);
@@ -151,8 +143,8 @@ architecture Behavioral of pipelined_core is
     end component;
     
     component pipe_mem_wb is
-        Port ( reset                : in  STD_LOGIC;
-               clk                  : in  STD_LOGIC;
+        Port ( reset                : in STD_LOGIC;
+               clk                  : in STD_LOGIC;
                EXMEM_reg_write      : in STD_LOGIC;
                EXMEM_write_dsrc     : in STD_LOGIC_VECTOR(1 downto 0);
                EXMEM_comp_result    : in STD_LOGIC_VECTOR(31 downto 0);
@@ -165,7 +157,6 @@ architecture Behavioral of pipelined_core is
                MEMWB_comp_result    : out STD_LOGIC_VECTOR(31 downto 0);
                MEMWB_tag_result     : out STD_LOGIC_VECTOR(31 downto 0);
                MEMWB_dmem_read_data : out STD_LOGIC_VECTOR(31 downto 0);
-               MEMWB_alu_result     : out STD_LOGIC_VECTOR(31 downto 0);
                WB_reg_write_dst     : out STD_LOGIC_VECTOR(3 downto 0) );
     end component;
     
@@ -189,17 +180,13 @@ architecture Behavioral of pipelined_core is
     ---------ID signals--------------------------------------
     signal sig_reg_write            : STD_LOGIC;
     signal sig_write_dsrc           : STD_LOGIC_VECTOR(1 downto 0);
-    signal sig_mem_read             : STD_LOGIC;
     signal sig_reg_dst              : STD_LOGIC;
-    signal sig_alu_src              : STD_LOGIC;
     signal sig_read_data_a          : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_read_data_b          : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_sign_ext_offset      : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_IDEX_reg_write       : STD_LOGIC;
     signal sig_IDEX_write_dsrc      : STD_LOGIC_VECTOR(1 downto 0);
-    signal sig_IDEX_mem_read        : STD_LOGIC;
     signal sig_IDEX_reg_dst         : STD_LOGIC;
-    signal sig_IDEX_alu_src         : STD_LOGIC;
     signal sig_IDEX_read_data_a     : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_IDEX_read_data_b     : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_IDEX_sign_ext_offset : STD_LOGIC_VECTOR(31 downto 0);
@@ -209,13 +196,11 @@ architecture Behavioral of pipelined_core is
     ---------EX signals--------------------------------------
     signal sig_comp_result          : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_tag_result           : STD_LOGIC_VECTOR(31 downto 0);
-    signal sig_alusrc_b             : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_alu_result           : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_carry_out            : STD_LOGIC;
     signal sig_reg_write_dst        : STD_LOGIC_VECTOR(3 downto 0);
     signal sig_EXMEM_reg_write      : STD_LOGIC;
     signal sig_EXMEM_write_dsrc     : STD_LOGIC_VECTOR(1 downto 0);
-    signal sig_EXMEM_mem_read       : STD_LOGIC;
     signal sig_EXMEM_comp_result    : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_EXMEM_tag_result     : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_EXMEM_alu_result     : STD_LOGIC_VECTOR(31 downto 0);
@@ -228,8 +213,9 @@ architecture Behavioral of pipelined_core is
     signal sig_MEMWB_comp_result    : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_MEMWB_tag_result     : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_MEMWB_dmem_read_data : STD_LOGIC_VECTOR(31 downto 0);
-    signal sig_MEMWB_alu_result     : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_WB_reg_write_dst     : STD_LOGIC_VECTOR(3 downto 0);
+    
+    ---------WB signals---------------------------------------
     signal sig_WB_data              : STD_LOGIC_VECTOR(31 downto 0);
     
 begin
@@ -244,12 +230,12 @@ begin
                addr_out => sig_curr_pc );
 
     next_pc : adder_4b 
-    port map ( src_a     => sig_curr_pc, 
+    port map ( src_a     => sig_curr_pc,
                src_b     => sig_one_4b,
                sum       => sig_next_pc,   
                carry_out => sig_pc_carry );
 					
-    insn_mem : instruction_memory 
+    insn_mem : instruction_memory
     port map ( reset    => reset,
                clk      => clk,
                addr_in  => sig_curr_pc,
@@ -266,9 +252,7 @@ begin
     port map ( opcode       => sig_ifid_insn(15 downto 12),
                reg_write    => sig_reg_write,
                write_dsrc   => sig_write_dsrc,
-               mem_read     => sig_mem_read,
-               reg_dst      => sig_reg_dst,
-               alu_src      => sig_alu_src);
+               reg_dst      => sig_reg_dst);
            
     reg_file : register_file
     port map ( reset            => reset,
@@ -282,106 +266,92 @@ begin
                read_data_b      => sig_read_data_b );
  
     sign_ext_4to32  : sign_extend_4to32
-    port map ( data_in  => sig_insn(3 downto 0),
+    port map ( data_in  => sig_ifid_insn(3 downto 0),
                data_out => sig_sign_ext_offset );
             
     pipe_IDEX : pipe_id_ex
-    Port map ( reset => reset,
-               clk => clk,
-               reg_write => sig_reg_write,
-               write_dsrc => sig_write_dsrc,
-               mem_read => sig_mem_read,
-               reg_dst => sig_reg_dst,
-               alu_src => sig_alu_src,
-               read_data_a => sig_read_data_a,
-               read_data_b => sig_read_data_b,
-               sign_ext_offset => sig_sign_ext_offset,
-               rt => sig_insn(7 downto 4),
-               rd => sig_insn(3 downto 0),
-               IDEX_reg_write => sig_IDEX_reg_write,
-               IDEX_write_dsrc => sig_IDEX_write_dsrc,
-               IDEX_mem_read => sig_IDEX_mem_read,
-               IDEX_reg_dst => sig_IDEX_reg_dst,
-               IDEX_alu_src => sig_IDEX_alu_src,
-               IDEX_read_data_a => sig_IDEX_read_data_a,
-               IDEX_read_data_b => sig_IDEX_read_data_b,
+    Port map ( reset                => reset,
+               clk                  => clk,
+               reg_write            => sig_reg_write,
+               write_dsrc           => sig_write_dsrc,
+               reg_dst              => sig_reg_dst,
+               read_data_a          => sig_read_data_a,
+               read_data_b          => sig_read_data_b,
+               sign_ext_offset      => sig_sign_ext_offset,
+               rt                   => sig_insn(7 downto 4),
+               rd                   => sig_insn(3 downto 0),
+               IDEX_reg_write       => sig_IDEX_reg_write,
+               IDEX_write_dsrc      => sig_IDEX_write_dsrc,
+               IDEX_reg_dst         => sig_IDEX_reg_dst,
+               IDEX_read_data_a     => sig_IDEX_read_data_a,
+               IDEX_read_data_b     => sig_IDEX_read_data_b,
                IDEX_sign_ext_offset => sig_IDEX_sign_ext_offset,
-               IDEX_rt => sig_IDEX_rt,
-               IDEX_rd => sig_IDEX_rd );
+               IDEX_rt              => sig_IDEX_rt,
+               IDEX_rd              => sig_IDEX_rd );
  
     ----------Execution-----------
     compare : comparator
-    port map ( data_a => sig_IDEX_read_data_a,
-               data_b => sig_IDEX_read_data_b,
-               eq => sig_comp_result);
+    port map ( data_a   => sig_IDEX_read_data_a(7 downto 0),
+               data_b   => sig_IDEX_read_data_b(7 downto 0),
+               eq       => sig_comp_result);
                
     tag_gen : tag_generator
-    port map ( D_in => sig_IDEX_read_data_a,
-               control => sig_IDEX_read_data_b(24 downto 0),
-               tag_result => sig_tag_result);
-               
-    mux_2to1_32b : mux_2to1_Nb
-    generic map (N => 32)
-    port map ( mux_select => sig_IDEX_alu_src,
-               data_a => sig_IDEX_sign_ext_offset,
-               data_b => sig_IDEX_read_data_b,
-               data_out => sig_alusrc_b );
+    port map ( D_in         => sig_IDEX_read_data_a,
+               control      => sig_IDEX_read_data_b(24 downto 0),
+               tag_result   => sig_tag_result);
                
     alu : adder_32b
-    port map ( src_a => sig_IDEX_read_data_a,
-               src_b => sig_alusrc_b,
-               sum => sig_alu_result,
-               carry_out => sig_carry_out );
+    port map ( src_a        => sig_IDEX_read_data_a,
+               src_b        => sig_IDEX_sign_ext_offset,
+               sum          => sig_alu_result,
+               carry_out    => sig_carry_out );
 
     mux_2to1_4b : mux_2to1_Nb
     generic map (N => 4)
-    port map ( mux_select => sig_IDEX_reg_dst,
-               data_a => sig_IDEX_rt,
-               data_b => sig_IDEX_rd,
-               data_out => sig_reg_write_dst );
+    port map ( mux_select   => sig_IDEX_reg_dst,
+               data_a       => sig_IDEX_rt,
+               data_b       => sig_IDEX_rd,
+               data_out     => sig_reg_write_dst );
                
     pipe_EXMEM : pipe_ex_mem
-    port map ( reset => reset,
-               clk => clk,
-               IDEX_reg_write => sig_IDEX_reg_write,
-               IDEX_write_dsrc => sig_IDEX_write_dsrc,
-               IDEX_mem_read => sig_IDEX_mem_read,
-               comp_result => sig_comp_result,
-               tag_result => sig_tag_result,
-               alu_result => sig_alu_result,
-               reg_write_dst => sig_reg_write_dst,
-               EXMEM_reg_write => sig_EXMEM_reg_write,
-               EXMEM_write_dsrc => sig_EXMEM_write_dsrc,
-               EXMEM_mem_read => sig_EXMEM_mem_read,
-               EXMEM_comp_result => sig_EXMEM_comp_result,
-               EXMEM_tag_result => sig_EXMEM_tag_result,
-               EXMEM_alu_result => sig_EXMEM_alu_result,
-               EXMEM_reg_write_dst => sig_EXMEM_reg_write_dst );
+    port map ( reset                => reset,
+               clk                  => clk,
+               IDEX_reg_write       => sig_IDEX_reg_write,
+               IDEX_write_dsrc      => sig_IDEX_write_dsrc,
+               comp_result          => sig_comp_result,
+               tag_result           => sig_tag_result,
+               alu_result           => sig_alu_result,
+               reg_write_dst        => sig_reg_write_dst,
+               EXMEM_reg_write      => sig_EXMEM_reg_write,
+               EXMEM_write_dsrc     => sig_EXMEM_write_dsrc,
+               EXMEM_comp_result    => sig_EXMEM_comp_result,
+               EXMEM_tag_result     => sig_EXMEM_tag_result,
+               EXMEM_alu_result     => sig_EXMEM_alu_result,
+               EXMEM_reg_write_dst  => sig_EXMEM_reg_write_dst );
              
     ----------Memory Access-----------
     data_mem : data_memory
-    port map ( reset => reset,
-               clk => clk,
-               addr_in => sig_EXMEM_alu_result(3 downto 0),
+    port map ( reset    => reset,
+               clk      => clk,
+               addr_in  => sig_EXMEM_alu_result(3 downto 0),
                data_out => sig_dmem_read_data );
    
     pipe_MEMWB : pipe_mem_wb
-    port map ( reset => reset,
-               clk => clk,
-               EXMEM_reg_write => sig_EXMEM_reg_write,
-               EXMEM_write_dsrc => sig_EXMEM_write_dsrc,
-               EXMEM_comp_result => sig_EXMEM_comp_result,
-               EXMEM_tag_result => sig_EXMEM_tag_result,
-               dmem_read_data => sig_dmem_read_data,
-               EXMEM_alu_result => sig_EXMEM_alu_result,
-               EXMEM_reg_write_dst => sig_EXMEM_reg_write_dst,
-               WB_reg_write => sig_WB_reg_write,
-               WB_write_dsrc => sig_WB_write_dsrc,
-               MEMWB_comp_result => sig_MEMWB_comp_result,
-               MEMWB_tag_result => sig_MEMWB_tag_result,
+    port map ( reset                => reset,
+               clk                  => clk,
+               EXMEM_reg_write      => sig_EXMEM_reg_write,
+               EXMEM_write_dsrc     => sig_EXMEM_write_dsrc,
+               EXMEM_comp_result    => sig_EXMEM_comp_result,
+               EXMEM_tag_result     => sig_EXMEM_tag_result,
+               dmem_read_data       => sig_dmem_read_data,
+               EXMEM_alu_result     => sig_EXMEM_alu_result,
+               EXMEM_reg_write_dst  => sig_EXMEM_reg_write_dst,
+               WB_reg_write         => sig_WB_reg_write,
+               WB_write_dsrc        => sig_WB_write_dsrc,
+               MEMWB_comp_result    => sig_MEMWB_comp_result,
+               MEMWB_tag_result     => sig_MEMWB_tag_result,
                MEMWB_dmem_read_data => sig_MEMWB_dmem_read_data,
-               MEMWB_alu_result => sig_MEMWB_alu_result,
-               WB_reg_write_dst => sig_WB_reg_write_dst );
+               WB_reg_write_dst     => sig_WB_reg_write_dst );
 
     wb_data : mux_3to1_32b
     port map ( mux_select => sig_WB_write_dsrc,

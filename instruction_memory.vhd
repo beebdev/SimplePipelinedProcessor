@@ -18,7 +18,7 @@ entity instruction_memory is
 end instruction_memory;
 
 architecture Behavioral of instruction_memory is
-    type mem_array is array(0 to 24) of std_logic_vector(15 downto 0);
+    type mem_array is array(0 to 15) of std_logic_vector(15 downto 0);
     signal sig_insn_mem : mem_array;
 begin
     mem_process: process ( clk, addr_in ) is

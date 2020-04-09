@@ -38,11 +38,12 @@ entity hazard_detection is
 end hazard_detection;
 
 architecture Behavioral of hazard_detection is
---if (ID/EX.MemRead and
--- ((ID/EX.RegisterRt = IF/ID.RegisterRs) or
--- (ID/EX.RegisterRt = IF/ID.RegisterRt)))
--- stall the pipeline
+    --if (ID/EX.MemRead and
+    -- ((ID/EX.RegisterRt = IF/ID.RegisterRs) or
+    -- (ID/EX.RegisterRt = IF/ID.RegisterRt)))
+    -- stall the pipeline
 begin
+
 	process(id_ex_memread,id_ex_rt,if_id_rs,if_id_rt)
 	begin
 		if id_ex_memread = '1' and ((id_ex_rt = if_id_rs) or (id_ex_rt = if_id_rt)) then 
