@@ -18,15 +18,15 @@ architecture Behavioral of pipelined_core is
     component program_counter is
         Port ( reset    : in STD_LOGIC;
                clk      : in STD_LOGIC;
-               addr_in  : in STD_LOGIC_VECTOR (15 downto 0);
-               addr_out : out STD_LOGIC_VECTOR (15 downto 0));
+               addr_in  : in STD_LOGIC_VECTOR (3 downto 0);
+               addr_out : out STD_LOGIC_VECTOR (3 downto 0));
     end component;
-    
+     
     component instruction_memory is
         Port ( reset    : in STD_LOGIC;
                clk      : in STD_LOGIC;
                addr_in  : in STD_LOGIC_VECTOR (3 downto 0);
-               insn_out : out STD_LOGIC_VECTOR (31 downto 0));
+               insn_out : out STD_LOGIC_VECTOR (15 downto 0));
     end component;
     
     component adder_4b is
@@ -71,28 +71,30 @@ architecture Behavioral of pipelined_core is
     end component;
     
     component pipe_id_ex is
-        Port ( reset                : in STD_LOGIC;
-               clk                  : in STD_LOGIC;
-               reg_write            : in STD_LOGIC;
-               write_dsrc           : in STD_LOGIC_VECTOR(1 downto 0);
-               mem_read             : in STD_LOGIC;
-               reg_dst              : in STD_LOGIC;
-               alu_src              : in STD_LOGIC;
-               read_data_a          : in STD_LOGIC_VECTOR(31 downto 0);
-               read_data_b          : in STD_LOGIC_VECTOR(31 downto 0);
-               sign_ext_offset      : in STD_LOGIC_VECTOR(31 downto 0);
-               rt                   : in STD_LOGIC_VECTOR(3 downto 0);
-               rd                   : in STD_LOGIC_VECTOR(3 downto 0);
-               IDEX_reg_write       : out STD_LOGIC;
-               IDEX_write_dsrc      : out STD_LOGIC_VECTOR(1 downto 0);
-               IDEX_mem_read        : out STD_LOGIC;
-               IDEX_reg_dst         : out STD_LOGIC;
-               IDEX_alu_src         : out STD_LOGIC;
-               IDEX_read_data_a     : out STD_LOGIC_VECTOR(31 downto 0);
-               IDEX_read_data_b     : out STD_LOGIC_VECTOR(31 downto 0);
-               IDEX_sign_ext_offset : out STD_LOGIC_VECTOR(31 downto 0);
-               IDEX_rt              : out STD_LOGIC_VECTOR(3 downto 0);
-               IDEX_rd              : out STD_LOGIC_VECTOR(3 downto 0) );
+		 Port ( reset : in STD_LOGIC;
+				  clk : in STD_LOGIC;
+				  reg_write : in STD_LOGIC;
+				  write_dsrc : in STD_LOGIC_VECTOR(1 downto 0);
+				  mem_read : in STD_LOGIC;
+				  reg_dst : in STD_LOGIC;
+				  alu_src : in STD_LOGIC;
+				  read_data_a : in STD_LOGIC_VECTOR(31 downto 0);
+				  read_data_b : in STD_LOGIC_VECTOR(31 downto 0);
+				  sign_ext_offset : in STD_LOGIC_VECTOR(31 downto 0);
+				  rs : in STD_LOGIC_VECTOR(3 downto 0);
+				  rt : in STD_LOGIC_VECTOR(3 downto 0);
+				  rd : in STD_LOGIC_VECTOR(3 downto 0);
+				  IDEX_reg_write : out STD_LOGIC;
+				  IDEX_write_dsrc : out STD_LOGIC_VECTOR(1 downto 0);
+				  IDEX_mem_read : out STD_LOGIC;
+				  IDEX_reg_dst : out STD_LOGIC;
+				  IDEX_alu_src : out STD_LOGIC;
+				  IDEX_read_data_a : out STD_LOGIC_VECTOR(31 downto 0);
+				  IDEX_read_data_b : out STD_LOGIC_VECTOR(31 downto 0);
+				  IDEX_sign_ext_offset : out STD_LOGIC_VECTOR(31 downto 0);
+				  IDEX_rs : out STD_LOGIC_VECTOR(3 downto 0);
+				  IDEX_rt : out STD_LOGIC_VECTOR(3 downto 0);
+				  IDEX_rd : out STD_LOGIC_VECTOR(3 downto 0) );
     end component;
     
     ---------EX Components----------------------------------
@@ -103,8 +105,8 @@ architecture Behavioral of pipelined_core is
     end component;
     
     component comparator is
-        Port ( data_a   : in STD_LOGIC_VECTOR (7 downto 0);
-               data_b   : in STD_LOGIC_VECTOR (7 downto 0);
+        Port ( data_a   : in STD_LOGIC_VECTOR (31 downto 0);
+               data_b   : in STD_LOGIC_VECTOR (31 downto 0);
                eq       : out STD_LOGIC_VECTOR(31 downto 0));
     end component;
     
@@ -205,7 +207,8 @@ architecture Behavioral of pipelined_core is
     signal sig_IDEX_sign_ext_offset : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_IDEX_rt              : STD_LOGIC_VECTOR(3 downto 0);
     signal sig_IDEX_rd              : STD_LOGIC_VECTOR(3 downto 0);
-    
+    signal sig_IDEX_rs              : STD_LOGIC_VECTOR(3 downto 0);      
+
     ---------EX signals--------------------------------------
     signal sig_comp_result          : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_tag_result           : STD_LOGIC_VECTOR(31 downto 0);
@@ -296,7 +299,8 @@ begin
                read_data_a => sig_read_data_a,
                read_data_b => sig_read_data_b,
                sign_ext_offset => sig_sign_ext_offset,
-               rt => sig_insn(7 downto 4),
+               rs => sig_insn(11 downto 8),
+					rt => sig_insn(7 downto 4),
                rd => sig_insn(3 downto 0),
                IDEX_reg_write => sig_IDEX_reg_write,
                IDEX_write_dsrc => sig_IDEX_write_dsrc,
@@ -306,8 +310,9 @@ begin
                IDEX_read_data_a => sig_IDEX_read_data_a,
                IDEX_read_data_b => sig_IDEX_read_data_b,
                IDEX_sign_ext_offset => sig_IDEX_sign_ext_offset,
+               IDEX_rs => sig_IDEX_rs,
                IDEX_rt => sig_IDEX_rt,
-               IDEX_rd => sig_IDEX_rd );
+               IDEX_rd => sig_IDEX_rd);
  
     ----------Execution-----------
     compare : comparator
