@@ -99,8 +99,8 @@ architecture Behavioral of pipelined_core is
     end component;
     
     component comparator is
-        Port ( data_a   : in STD_LOGIC_VECTOR (7 downto 0);
-               data_b   : in STD_LOGIC_VECTOR (7 downto 0);
+        Port ( data_a   : in STD_LOGIC_VECTOR (31 downto 0);
+               data_b   : in STD_LOGIC_VECTOR (31 downto 0);
                eq       : out STD_LOGIC_VECTOR(31 downto 0));
     end component;
     
@@ -162,7 +162,8 @@ architecture Behavioral of pipelined_core is
                WB_reg_write_dst     : out STD_LOGIC_VECTOR(3 downto 0) );
     end component;
     
-    component mux_3to1_32b is
+    component mux_3to1_Nb is
+        generic (N : integer);
         Port ( mux_select   : in STD_LOGIC_VECTOR (1 downto 0);
                data_a       : in STD_LOGIC_VECTOR (31 downto 0);
                data_b       : in STD_LOGIC_VECTOR (31 downto 0);
@@ -170,6 +171,19 @@ architecture Behavioral of pipelined_core is
                data_out     : out STD_LOGIC_VECTOR (31 downto 0));
     end component;
     
+    component forward is
+        Port ( IDEX_rs              : in STD_LOGIC_VECTOR(3 downto 0);
+               IDEX_rt              : in STD_LOGIC_VECTOR(3 downto 0);
+               EXMEM_reg_write_dst  : in STD_LOGIC_VECTOR(3 downto 0);
+               WB_reg_write_dst     : in STD_LOGIC_VECTOR(3 downto 0);
+               EXMEM_reg_write      : in STD_LOGIC;
+               WB_reg_write         : in STD_LOGIC;
+               comp_sel_a           : out STD_LOGIC_VECTOR(1 downto 0);
+               comp_sel_b           : out STD_LOGIC_VECTOR(1 downto 0);
+               tag_sel_a            : out STD_LOGIC;
+               tag_sel_b            : out STD_LOGIC;
+               alu_sel_a            : out STD_LOGIC );
+    end component;
     
     ---------IF signals--------------------------------------
     signal sig_curr_pc              : STD_LOGIC_VECTOR(3 downto 0);
@@ -197,8 +211,13 @@ architecture Behavioral of pipelined_core is
     signal sig_IDEX_rs              : STD_LOGIC_VECTOR(3 downto 0);      
 
     ---------EX signals--------------------------------------
+    signal sig_comp_in_a            : STD_LOGIC_VECTOR(31 downto 0);
+    signal sig_comp_in_b            : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_comp_result          : STD_LOGIC_VECTOR(31 downto 0);
+    signal sig_tag_in_a             : STD_LOGIC_VECTOR(31 downto 0);
+    signal sig_tag_in_b             : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_tag_result           : STD_LOGIC_VECTOR(31 downto 0);
+    signal sig_alu_in_a             : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_alu_result           : STD_LOGIC_VECTOR(31 downto 0);
     signal sig_carry_out            : STD_LOGIC;
     signal sig_reg_write_dst        : STD_LOGIC_VECTOR(3 downto 0);
@@ -220,6 +239,15 @@ architecture Behavioral of pipelined_core is
     
     ---------WB signals---------------------------------------
     signal sig_WB_data              : STD_LOGIC_VECTOR(31 downto 0);
+    
+    ---------Forwarding Unit----------------------------------
+    signal sig_comp_sel_a           : STD_LOGIC_VECTOR(1 downto 0);
+    signal sig_comp_sel_b           : STD_LOGIC_VECTOR(1 downto 0);
+    signal sig_tag_sel_a            : STD_LOGIC;
+    signal sig_tag_sel_b            : STD_LOGIC;
+    signal sig_alu_sel_a            : STD_LOGIC;
+    
+    ---------Hazard Detection Unit----------------------------
     
 begin
 
@@ -296,17 +324,17 @@ begin
  
     ----------Execution-----------
     compare : comparator
-    port map ( data_a   => sig_IDEX_read_data_a(7 downto 0),
-               data_b   => sig_IDEX_read_data_b(7 downto 0),
+    port map ( data_a   => sig_comp_in_a(7 downto 0),
+               data_b   => sig_comp_in_b(7 downto 0),
                eq       => sig_comp_result);
                
     tag_gen : tag_generator
-    port map ( D_in         => sig_IDEX_read_data_a,
-               control      => sig_IDEX_read_data_b(24 downto 0),
+    port map ( D_in         => sig_tag_in_a,
+               control      => sig_tag_in_b(24 downto 0),
                tag_result   => sig_tag_result);
                
     alu : adder_32b
-    port map ( src_a        => sig_IDEX_read_data_a,
+    port map ( src_a        => sig_alu_in_a,
                src_b        => sig_IDEX_sign_ext_offset,
                sum          => sig_alu_result,
                carry_out    => sig_carry_out );
@@ -358,12 +386,27 @@ begin
                MEMWB_dmem_read_data => sig_MEMWB_dmem_read_data,
                WB_reg_write_dst     => sig_WB_reg_write_dst );
 
-    wb_data : mux_3to1_32b
-    port map ( mux_select => sig_WB_write_dsrc,
-               data_a => sig_MEMWB_comp_result,
-               data_b => sig_MEMWB_tag_result,
-               data_c => sig_MEMWB_dmem_read_data,
-               data_out => sig_WB_data);
+    wb_data : mux_3to1_Nb
+    generic map (N => 32)
+    port map ( mux_select   => sig_WB_write_dsrc,
+               data_a       => sig_MEMWB_comp_result,
+               data_b       => sig_MEMWB_tag_result,
+               data_c       => sig_MEMWB_dmem_read_data,
+               data_out     => sig_WB_data);
+               
+    -----------------Forwarding Unit----------------------
+    forwarding_unit : forward
+    port map ( IDEX_rs => sig_IDEX_rs,
+               IDEX_rt => sig_IDEX_rt,
+               EXMEM_reg_write_dst => sig_EXMEM_reg_write_dst,
+               WB_reg_write_dst => sig_WB_reg_write_dst,
+               EXMEM_reg_write => sig_EXMEM_reg_write,
+               WB_reg_write => sig_WB_reg_write,
+               comp_sel_a => sig_comp_sel_a,
+               comp_sel_b => sig_comp_sel_b,
+               tag_sel_a => sig_tag_sel_a,
+               tag_sel_b => sig_tag_sel_b,
+               alu_sel_a => sig_alu_sel_a );
                
     -----------------Hazard detection---------------------
     
