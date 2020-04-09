@@ -1,3 +1,10 @@
+-----------------------------------------------------------------------------------
+-- COMP3211 Computer Architecture 20T1                                           --
+-- Assignment 1                                                                  --
+-- Author: Po Jui Shih (z5187581)                                                --
+--         Wei Leong Soon (z5187379)                                             --
+-----------------------------------------------------------------------------------
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
@@ -9,191 +16,168 @@ end pipelined_core;
 architecture Behavioral of pipelined_core is
     ---------IF Components----------------------------------
     component program_counter is
-        port ( reset    : in  std_logic;
-               clk      : in  std_logic;
-               addr_in  : in  std_logic_vector(3 downto 0);
-               addr_out : out std_logic_vector(3 downto 0) );
+        Port ( reset    : in STD_LOGIC;
+               clk      : in STD_LOGIC;
+               addr_in  : in STD_LOGIC_VECTOR (15 downto 0);
+               addr_out : out STD_LOGIC_VECTOR (15 downto 0));
     end component;
     
     component instruction_memory is
         Port ( reset    : in STD_LOGIC;
                clk      : in STD_LOGIC;
                addr_in  : in STD_LOGIC_VECTOR (3 downto 0);
-               insn_out : out STD_LOGIC_VECTOR (15 downto 0) );
+               insn_out : out STD_LOGIC_VECTOR (31 downto 0));
     end component;
     
     component adder_4b is
-        Port ( src_a : in STD_LOGIC_VECTOR (3 downto 0);
-               src_b : in STD_LOGIC_VECTOR (3 downto 0);
-               sum : out STD_LOGIC_VECTOR (3 downto 0);
-               carry_out : out STD_LOGIC );
+        Port ( src_a    : in STD_LOGIC_VECTOR (3 downto 0);
+               src_b    : in STD_LOGIC_VECTOR (3 downto 0);
+               sum      : out STD_LOGIC_VECTOR (3 downto 0);
+               carry_out: out STD_LOGIC );
     end component;
    
     component pipe_if_id is
-        Port ( clk : in  STD_LOGIC;
-               reset : in  STD_LOGIC;
-               inst_in : in  STD_LOGIC_VECTOR (15 downto 0);
-               inst_out : out  STD_LOGIC_VECTOR (15 downto 0) );
+        Port ( reset        : in  STD_LOGIC;
+               clk          : in  STD_LOGIC;
+               inst_in      : in  STD_LOGIC_VECTOR (15 downto 0);
+               inst_out     : out  STD_LOGIC_VECTOR (15 downto 0) );
     end component;
 
     ---------ID Components----------------------------------
     component control_unit is
-        Port ( opcode : in STD_LOGIC_VECTOR (3 downto 0);
-               reg_write : out STD_LOGIC;
-               write_dsrc : out STD_LOGIC_VECTOR(1 downto 0);
-               mem_read : out STD_LOGIC;
-               reg_dst : out STD_LOGIC;
-               alu_src : out STD_LOGIC );
+        Port ( opcode       : in STD_LOGIC_VECTOR (3 downto 0);
+               reg_write    : out STD_LOGIC;
+               write_dsrc   : out STD_LOGIC_VECTOR(1 downto 0);
+               mem_read     : out STD_LOGIC;
+               reg_dst      : out STD_LOGIC;
+               alu_src      : out STD_LOGIC );
     end component;
     
     component register_file is
-        Port ( reset : in STD_LOGIC;
-               clk : in STD_LOGIC;
-               read_register_a : in STD_LOGIC_VECTOR (3 downto 0);
-               read_register_b : in STD_LOGIC_VECTOR (3 downto 0);
-               write_enable : in STD_LOGIC;
-               write_register : in STD_LOGIC_VECTOR (3 downto 0);
-               write_data : in STD_LOGIC_VECTOR (31 downto 0);
-               read_data_a : out STD_LOGIC_VECTOR (31 downto 0);
-               read_data_b : out STD_LOGIC_VECTOR (31 downto 0));
+        Port ( reset            : in STD_LOGIC;
+               clk              : in STD_LOGIC;
+               read_register_a  : in STD_LOGIC_VECTOR (3 downto 0);
+               read_register_b  : in STD_LOGIC_VECTOR (3 downto 0);
+               write_enable     : in STD_LOGIC;
+               write_register   : in STD_LOGIC_VECTOR (3 downto 0);
+               write_data       : in STD_LOGIC_VECTOR (31 downto 0);
+               read_data_a      : out STD_LOGIC_VECTOR (31 downto 0);
+               read_data_b      : out STD_LOGIC_VECTOR (31 downto 0));
     end component;
     
-    component sign_extend_NtoM is
-        generic (N : integer;
-                 M : integer );
-        Port ( data_in : in STD_LOGIC_VECTOR (N downto 0);
-               data_out : out STD_LOGIC_VECTOR (M downto 0));
+    component sign_extend_4to32 is
+        Port ( data_in  : in STD_LOGIC_VECTOR (3 downto 0);
+               data_out : out STD_LOGIC_VECTOR (31 downto 0));
     end component;
     
     component pipe_id_ex is
-    Port ( reset : in STD_LOGIC;
-           clk : in STD_LOGIC;
-           reg_write : in STD_LOGIC;
-           write_dsrc : in STD_LOGIC_VECTOR(1 downto 0);
-           mem_read : in STD_LOGIC;
-           reg_dst : in STD_LOGIC;
-           alu_src : in STD_LOGIC;
-           read_data_a : in STD_LOGIC_VECTOR(31 downto 0);
-           read_data_b : in STD_LOGIC_VECTOR(31 downto 0);
-           sign_ext_offset : in STD_LOGIC_VECTOR(31 downto 0);
-           rt : in STD_LOGIC_VECTOR(3 downto 0);
-           rd : in STD_LOGIC_VECTOR(3 downto 0);
-           IDEX_reg_write : out STD_LOGIC;
-           IDEX_write_dsrc : out STD_LOGIC_VECTOR(1 downto 0);
-           IDEX_mem_read : out STD_LOGIC;
-           IDEX_reg_dst : out STD_LOGIC;
-           IDEX_alu_src : out STD_LOGIC;
-           IDEX_read_data_a : out STD_LOGIC_VECTOR(31 downto 0);
-           IDEX_read_data_b : out STD_LOGIC_VECTOR(31 downto 0);
-           IDEX_sign_ext_offset : out STD_LOGIC_VECTOR(31 downto 0);
-           IDEX_rt : out STD_LOGIC_VECTOR(3 downto 0);
-           IDEX_rd : out STD_LOGIC_VECTOR(3 downto 0) );
+        Port ( reset                : in STD_LOGIC;
+               clk                  : in STD_LOGIC;
+               reg_write            : in STD_LOGIC;
+               write_dsrc           : in STD_LOGIC_VECTOR(1 downto 0);
+               mem_read             : in STD_LOGIC;
+               reg_dst              : in STD_LOGIC;
+               alu_src              : in STD_LOGIC;
+               read_data_a          : in STD_LOGIC_VECTOR(31 downto 0);
+               read_data_b          : in STD_LOGIC_VECTOR(31 downto 0);
+               sign_ext_offset      : in STD_LOGIC_VECTOR(31 downto 0);
+               rt                   : in STD_LOGIC_VECTOR(3 downto 0);
+               rd                   : in STD_LOGIC_VECTOR(3 downto 0);
+               IDEX_reg_write       : out STD_LOGIC;
+               IDEX_write_dsrc      : out STD_LOGIC_VECTOR(1 downto 0);
+               IDEX_mem_read        : out STD_LOGIC;
+               IDEX_reg_dst         : out STD_LOGIC;
+               IDEX_alu_src         : out STD_LOGIC;
+               IDEX_read_data_a     : out STD_LOGIC_VECTOR(31 downto 0);
+               IDEX_read_data_b     : out STD_LOGIC_VECTOR(31 downto 0);
+               IDEX_sign_ext_offset : out STD_LOGIC_VECTOR(31 downto 0);
+               IDEX_rt              : out STD_LOGIC_VECTOR(3 downto 0);
+               IDEX_rd              : out STD_LOGIC_VECTOR(3 downto 0) );
     end component;
     
     ---------EX Components----------------------------------
     component tag_generator is
-        Port ( D_in : in STD_LOGIC_VECTOR (31 downto 0);
-               control : in STD_LOGIC_VECTOR (24 downto 0);
-               tag_result : out STD_LOGIC_VECTOR (31 downto 0));
+        Port ( D_in         : in STD_LOGIC_VECTOR (31 downto 0);
+               control      : in STD_LOGIC_VECTOR (24 downto 0);
+               tag_result   : out STD_LOGIC_VECTOR (31 downto 0));
     end component;
     
-	component comparator is
-		 Port ( data_a : in STD_LOGIC_VECTOR (31 downto 0);
-				  data_b : in STD_LOGIC_VECTOR (31 downto 0);
-				  eq : out STD_LOGIC_VECTOR(31 downto 0));
-	end component;
+    component comparator is
+        Port ( data_a   : in STD_LOGIC_VECTOR (7 downto 0);
+               data_b   : in STD_LOGIC_VECTOR (7 downto 0);
+               eq       : out STD_LOGIC_VECTOR(31 downto 0));
+    end component;
     
     component mux_2to1_Nb is
         generic (N : integer);
-        Port ( mux_select : in STD_LOGIC;
-               data_a : in STD_LOGIC_VECTOR (N-1 downto 0);
-               data_b : in STD_LOGIC_VECTOR (N-1 downto 0);
-               data_out : out STD_LOGIC_VECTOR (N-1 downto 0));
+        Port ( mux_select   : in STD_LOGIC;
+               data_a       : in STD_LOGIC_VECTOR (N-1 downto 0);
+               data_b       : in STD_LOGIC_VECTOR (N-1 downto 0);
+               data_out     : out STD_LOGIC_VECTOR (N-1 downto 0));
     end component;
 
-    component adder_Nb is
-        generic (N : integer);
-        Port ( src_a : in STD_LOGIC_VECTOR (N-1 downto 0);
-               src_b : in STD_LOGIC_VECTOR (N-1 downto 0);
-               sum : out STD_LOGIC_VECTOR (N-1 downto 0);
-               carry_out : out STD_LOGIC );
+    component adder_32b is
+        Port ( src_a        : in STD_LOGIC_VECTOR (31 downto 0);
+               src_b        : in STD_LOGIC_VECTOR (31 downto 0);
+               sum          : out STD_LOGIC_VECTOR (31 downto 0);
+               carry_out    : out STD_LOGIC );
     end component;
     
     component pipe_ex_mem is
-        Port ( reset : in  STD_LOGIC;
-               clk : in  STD_LOGIC;
-               IDEX_reg_write : in STD_LOGIC;
-               IDEX_write_dsrc : in STD_LOGIC_VECTOR(1 downto 0);
-               IDEX_mem_read : in STD_LOGIC;
-               comp_result : in STD_LOGIC_VECTOR(31 downto 0);
-               tag_result : in STD_LOGIC_VECTOR(31 downto 0);
-               alu_result : in STD_LOGIC_VECTOR(31 downto 0);
-               reg_write_dst : in STD_LOGIC_VECTOR(3 downto 0);
-               EXMEM_reg_write : out STD_LOGIC;
-               EXMEM_write_dsrc : out STD_LOGIC_VECTOR(1 downto 0);
-               EXMEM_mem_read : out STD_LOGIC;
-               EXMEM_comp_result : out STD_LOGIC_VECTOR(31 downto 0);
-               EXMEM_tag_result : out STD_LOGIC_VECTOR(31 downto 0);
-               EXMEM_alu_result : out STD_LOGIC_VECTOR(31 downto 0);
-               EXMEM_reg_write_dst : out STD_LOGIC_VECTOR(3 downto 0) );
+        Port ( reset                : in  STD_LOGIC;
+               clk                  : in  STD_LOGIC;
+               IDEX_reg_write       : in STD_LOGIC;
+               IDEX_write_dsrc      : in STD_LOGIC_VECTOR(1 downto 0);
+               IDEX_mem_read        : in STD_LOGIC;
+               comp_result          : in STD_LOGIC_VECTOR(31 downto 0);
+               tag_result           : in STD_LOGIC_VECTOR(31 downto 0);
+               alu_result           : in STD_LOGIC_VECTOR(31 downto 0);
+               reg_write_dst        : in STD_LOGIC_VECTOR(3 downto 0);
+               EXMEM_reg_write      : out STD_LOGIC;
+               EXMEM_write_dsrc     : out STD_LOGIC_VECTOR(1 downto 0);
+               EXMEM_mem_read       : out STD_LOGIC;
+               EXMEM_comp_result    : out STD_LOGIC_VECTOR(31 downto 0);
+               EXMEM_tag_result     : out STD_LOGIC_VECTOR(31 downto 0);
+               EXMEM_alu_result     : out STD_LOGIC_VECTOR(31 downto 0);
+               EXMEM_reg_write_dst  : out STD_LOGIC_VECTOR(3 downto 0) );
     end component;
 
     ---------MEM Components---------------------------------
     component data_memory is
-		 Port ( reset : in STD_LOGIC;
-				  clk : in STD_LOGIC;
-				  addr_in : in STD_LOGIC_VECTOR (31 downto 0);
-				  data_out : out STD_LOGIC_VECTOR (31 downto 0));
+        Port ( reset    : in STD_LOGIC;
+               clk      : in STD_LOGIC;
+               addr_in  : in STD_LOGIC_VECTOR (3 downto 0);
+               data_out : out STD_LOGIC_VECTOR (31 downto 0));
     end component;
     
     component pipe_mem_wb is
-        Port ( reset : in  STD_LOGIC;
-               clk : in  STD_LOGIC;
-               EXMEM_reg_write : in STD_LOGIC;
-               EXMEM_write_dsrc : in STD_LOGIC_VECTOR(1 downto 0);
-               EXMEM_comp_result : in STD_LOGIC_VECTOR(31 downto 0);
-               EXMEM_tag_result : in STD_LOGIC_VECTOR(31 downto 0);
-               dmem_read_data : in STD_LOGIC_VECTOR(31 downto 0);
-               EXMEM_alu_result : in STD_LOGIC_VECTOR(31 downto 0);
-               EXMEM_reg_write_dst : in STD_LOGIC_VECTOR(3 downto 0);
-               WB_reg_write : out STD_LOGIC;
-               WB_write_dsrc : out STD_LOGIC_VECTOR(1 downto 0);
-               MEMWB_comp_result : out STD_LOGIC_VECTOR(31 downto 0);
-               MEMWB_tag_result : out STD_LOGIC_VECTOR(31 downto 0);
+        Port ( reset                : in  STD_LOGIC;
+               clk                  : in  STD_LOGIC;
+               EXMEM_reg_write      : in STD_LOGIC;
+               EXMEM_write_dsrc     : in STD_LOGIC_VECTOR(1 downto 0);
+               EXMEM_comp_result    : in STD_LOGIC_VECTOR(31 downto 0);
+               EXMEM_tag_result     : in STD_LOGIC_VECTOR(31 downto 0);
+               dmem_read_data       : in STD_LOGIC_VECTOR(31 downto 0);
+               EXMEM_alu_result     : in STD_LOGIC_VECTOR(31 downto 0);
+               EXMEM_reg_write_dst  : in STD_LOGIC_VECTOR(3 downto 0);
+               WB_reg_write         : out STD_LOGIC;
+               WB_write_dsrc        : out STD_LOGIC_VECTOR(1 downto 0);
+               MEMWB_comp_result    : out STD_LOGIC_VECTOR(31 downto 0);
+               MEMWB_tag_result     : out STD_LOGIC_VECTOR(31 downto 0);
                MEMWB_dmem_read_data : out STD_LOGIC_VECTOR(31 downto 0);
-               MEMWB_alu_result : out STD_LOGIC_VECTOR(31 downto 0);
-               WB_reg_write_dst : out STD_LOGIC_VECTOR(3 downto 0) );
+               MEMWB_alu_result     : out STD_LOGIC_VECTOR(31 downto 0);
+               WB_reg_write_dst     : out STD_LOGIC_VECTOR(3 downto 0) );
     end component;
     
     component mux_3to1_32b is
-        Port ( mux_select : in STD_LOGIC_VECTOR (1 downto 0);
-               data_a : in STD_LOGIC_VECTOR (31 downto 0);
-               data_b : in STD_LOGIC_VECTOR (31 downto 0);
-               data_c : in STD_LOGIC_VECTOR (31 downto 0);
-               data_out : out STD_LOGIC_VECTOR (31 downto 0));
+        Port ( mux_select   : in STD_LOGIC_VECTOR (1 downto 0);
+               data_a       : in STD_LOGIC_VECTOR (31 downto 0);
+               data_b       : in STD_LOGIC_VECTOR (31 downto 0);
+               data_c       : in STD_LOGIC_VECTOR (31 downto 0);
+               data_out     : out STD_LOGIC_VECTOR (31 downto 0));
     end component;
-
-	--miscelullous-------------------------------------------    
-	component sign_extend_4to32 is
-		 Port ( data_in : in  STD_LOGIC_VECTOR (3 downto 0);
-				  data_out : out  STD_LOGIC_VECTOR (31 downto 0));
-	end component;
-
-	component mux_2to1_32b is
-		 Port ( mux_select : in  STD_LOGIC;
-				  data_a : in  STD_LOGIC_VECTOR (31 downto 0);
-				  data_b : in  STD_LOGIC_VECTOR (31 downto 0);
-				  data_out : out  STD_LOGIC_VECTOR (31 downto 0));
-	end component;
-
-	component mux_2to1_4b is
-		 Port ( mux_select : in STD_LOGIC;
-				  data_a : in STD_LOGIC_VECTOR (3 downto 0);
-				  data_b : in STD_LOGIC_VECTOR (3 downto 0);
-				  data_out : out STD_LOGIC_VECTOR (3 downto 0));
-	end component;
-
-
+    
+    
     ---------IF signals--------------------------------------
     signal sig_curr_pc              : STD_LOGIC_VECTOR(3 downto 0);
     signal sig_next_pc              : STD_LOGIC_VECTOR(3 downto 0);
@@ -297,17 +281,9 @@ begin
                read_data_a      => sig_read_data_a,
                read_data_b      => sig_read_data_b );
  
---- i currently dun have sign_extend_NtoM , but i i have sign extend 4 to 32
---    sign_ext_4to32  : sign_extend_NtoM
---    generic map (N      => 3,
---                 M      => 32 )
---    port map ( data_in  => sig_insn(3 downto 0),
---               data_out => sig_sign_ext_offset );
-
-	 sign_ext : sign_extend_4to32 
-		 port map ( data_in  => sig_insn(3 downto 0),
-						data_out => sig_sign_ext_offset );
-	 
+    sign_ext_4to32  : sign_extend_4to32
+    port map ( data_in  => sig_insn(3 downto 0),
+               data_out => sig_sign_ext_offset );
             
     pipe_IDEX : pipe_id_ex
     Port map ( reset => reset,
@@ -343,54 +319,26 @@ begin
     port map ( D_in => sig_IDEX_read_data_a,
                control => sig_IDEX_read_data_b(24 downto 0),
                tag_result => sig_tag_result);
-					
-					
-----------------COMMMENTED OUT BECAUSE I DONT HAVE THE COMPONENT-------------------               
---    mux_2to1_32b : mux_2to1_Nb
---    generic map (N => 32)
---    port map ( mux_select => sig_IDEX_alu_src,
---               data_a => sig_IDEX_sign_ext_offset,
---               data_b => sig_IDEX_read_data_b,
---               data_out => sig_alusrc_b );
-
---    mux_2to1_4b : mux_2to1_Nb
---    generic map (N => 4)
---    port map ( mux_select => sig_IDEX_reg_dst,
---               data_a => sig_IDEX_rt,
---               data_b => sig_IDEX_rd,
---               data_out => sig_reg_write_dst );
-
-----------------------------------------------------------------------------------               
-    mux32b : mux_2to1_32b
+               
+    mux_2to1_32b : mux_2to1_Nb
+    generic map (N => 32)
     port map ( mux_select => sig_IDEX_alu_src,
                data_a => sig_IDEX_sign_ext_offset,
                data_b => sig_IDEX_read_data_b,
                data_out => sig_alusrc_b );
-
-
-    mux4b : mux_2to1_4b
-    --generic map (N => 4)
-    port map ( mux_select => sig_IDEX_reg_dst,
-               data_a => sig_IDEX_rt,
-               data_b => sig_IDEX_rd,
-               data_out => sig_reg_write_dst );
-
-
-
-------------------------------------------------------------------------------------
-
-
-    adder_32b : adder_Nb
-    generic map (N => 32)
+               
+    alu : adder_32b
     port map ( src_a => sig_IDEX_read_data_a,
                src_b => sig_alusrc_b,
                sum => sig_alu_result,
                carry_out => sig_carry_out );
 
-
-
-	
-
+    mux_2to1_4b : mux_2to1_Nb
+    generic map (N => 4)
+    port map ( mux_select => sig_IDEX_reg_dst,
+               data_a => sig_IDEX_rt,
+               data_b => sig_IDEX_rd,
+               data_out => sig_reg_write_dst );
                
     pipe_EXMEM : pipe_ex_mem
     port map ( reset => reset,
@@ -414,7 +362,7 @@ begin
     data_mem : data_memory
     port map ( reset => reset,
                clk => clk,
-               addr_in => sig_EXMEM_alu_result,
+               addr_in => sig_EXMEM_alu_result(3 downto 0),
                data_out => sig_dmem_read_data );
    
     pipe_MEMWB : pipe_mem_wb

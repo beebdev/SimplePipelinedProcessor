@@ -1,18 +1,24 @@
+-----------------------------------------------------------------------------------
+-- COMP3211 Computer Architecture 20T1                                           --
+-- Assignment 1                                                                  --
+-- Author: Po Jui Shih (z5187581)                                                --
+--         Wei Leong Soon (z5187379)                                             --
+-----------------------------------------------------------------------------------
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
---use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
 entity swapper is
-    Port ( control : in STD_LOGIC_VECTOR(12 downto 0);
-           D0 : in STD_LOGIC_VECTOR(7 downto 0);
-           D1 : in STD_LOGIC_VECTOR(7 downto 0);
-           D2 : in STD_LOGIC_VECTOR(7 downto 0);
-           D3 : in STD_LOGIC_VECTOR(7 downto 0);
-           A0 : out STD_LOGIC_VECTOR(7 downto 0);
-           A1 : out STD_LOGIC_VECTOR(7 downto 0);
-           A2 : out STD_LOGIC_VECTOR(7 downto 0);
-           A3 : out STD_LOGIC_VECTOR(7 downto 0));
+    Port ( control  : in STD_LOGIC_VECTOR(12 downto 0);
+           D0       : in STD_LOGIC_VECTOR(7 downto 0);
+           D1       : in STD_LOGIC_VECTOR(7 downto 0);
+           D2       : in STD_LOGIC_VECTOR(7 downto 0);
+           D3       : in STD_LOGIC_VECTOR(7 downto 0);
+           A0       : out STD_LOGIC_VECTOR(7 downto 0);
+           A1       : out STD_LOGIC_VECTOR(7 downto 0);
+           A2       : out STD_LOGIC_VECTOR(7 downto 0);
+           A3       : out STD_LOGIC_VECTOR(7 downto 0));
 end swapper;
 
 architecture Behavioral of swapper is
@@ -30,6 +36,7 @@ architecture Behavioral of swapper is
     signal b_s, b_e : unsigned(2 downto 0);
     signal size : unsigned(2 downto 0);
 begin
+
     -- extract signal from control
     b1 <= control(1 downto 0);
     b2 <= control(3 downto 2);
@@ -102,4 +109,5 @@ begin
         out_a(to_integer(a_e) downto to_integer(a_s)) <= in_b(to_integer(b_e) downto to_integer(b_s));
         out_b(to_integer(b_e) downto to_integer(b_s)) <= in_a(to_integer(a_e) downto to_integer(a_s));
     end process;
+    
 end Behavioral;
