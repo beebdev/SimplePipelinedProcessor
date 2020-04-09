@@ -30,10 +30,10 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity hazard_detection is
-    Port ( id_ex_memread : in  STD_LOGIC;
-           id_ex_rt : in  STD_LOGIC_VECTOR (3 downto 0);
-           if_id_rs : in  STD_LOGIC_VECTOR (3 downto 0);--11 to 8
-           if_id_rt : in  STD_LOGIC_VECTOR (3 downto 0);--7 to 4
+    Port ( IDEX_write_dsrc : in  STD_LOGIC_VECTOR(1 downto 0);
+           IDEX_rt : in  STD_LOGIC_VECTOR (3 downto 0);
+           IFID_rs : in  STD_LOGIC_VECTOR (3 downto 0);--11 to 8
+           IFID_rt : in  STD_LOGIC_VECTOR (3 downto 0);--7 to 4
            stall : out  STD_LOGIC);
 end hazard_detection;
 
@@ -44,15 +44,15 @@ architecture Behavioral of hazard_detection is
     -- stall the pipeline
 begin
 
-	process(id_ex_memread,id_ex_rt,if_id_rs,if_id_rt)
+	process(IDEX_write_dsrc, IDEX_rt, IFID_rs, IFID_rt)
 	begin
-		if id_ex_memread = '1' and ((id_ex_rt = if_id_rs) or (id_ex_rt = if_id_rt)) then 
+		if (IDEX_write_dsrc = "10")
+                and ((IDEX_rt = IFID_rs) or (IDEX_rt = IFID_rt)) then 
 			stall <= '1';
 		else
 			stall <= '0';
 		end if;
 	end process;
-
-
+	
 end Behavioral;
 
