@@ -14,11 +14,11 @@ entity instruction_memory is
     Port ( reset    : in STD_LOGIC;
            clk      : in STD_LOGIC;
            addr_in  : in STD_LOGIC_VECTOR (3 downto 0);
-           insn_out : out STD_LOGIC_VECTOR (31 downto 0));
+           insn_out : out STD_LOGIC_VECTOR (15 downto 0));
 end instruction_memory;
 
 architecture Behavioral of instruction_memory is
-    type mem_array is array(0 to 24) of std_logic_vector(31 downto 0);
+    type mem_array is array(0 to 24) of std_logic_vector(15 downto 0);
     signal sig_insn_mem : mem_array;
 begin
     mem_process: process ( clk, addr_in ) is
