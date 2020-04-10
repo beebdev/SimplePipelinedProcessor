@@ -29,7 +29,7 @@ begin
     write_dsrc <= "00" when opcode = OP_CMP else
                   "01" when opcode = OP_TAG else
                   "10" when opcode = OP_LOAD else
-                  (others => 'X');
+                  "11";
                  
     reg_dst <= '1' when (opcode = OP_CMP or opcode = OP_TAG) else
                '0';

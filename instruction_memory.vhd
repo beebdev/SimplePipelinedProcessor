@@ -27,11 +27,11 @@ begin
     begin
         if (reset = '1') then
             insn_out <= (others => '0');
-            var_insn_mem(0)   := X"1010";
-            var_insn_mem(1)   := X"1021";
-            var_insn_mem(2)   := X"1032";
-            var_insn_mem(3)   := X"2134";
-            var_insn_mem(4)   := X"3425";
+            var_insn_mem(0)   := X"1010";   -- Load $1, 0($0)
+            var_insn_mem(1)   := X"1021";   -- Load $2, 1($0)
+            var_insn_mem(2)   := X"1032";   -- Load $3, 2($0)
+            var_insn_mem(3)   := X"2134";   -- TG   $4, $1, $3
+            var_insn_mem(4)   := X"3425";   -- CMP  $5, $4, $2
             var_insn_mem(5)   := X"0000";
             var_insn_mem(6)   := X"0000";
             var_insn_mem(7)   := X"0000";

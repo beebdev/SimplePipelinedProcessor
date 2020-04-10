@@ -27,6 +27,11 @@ begin
 	         EXMEM_write_dsrc, EXMEM_rt,
 	         IFID_rs, IFID_rt)
 	begin
+        -- Stalling algorithm:
+        -- if id/ex or ex/mem reads memory and rt not 0 and rt equals to
+        -- one of rs or rt in if/id register, then we stall
+        
+        -- Note:
         -- IDEX_write_dsrc = 2 -> access data memory (LOAD)
         if ((IDEX_write_dsrc = "10") and (IDEX_rt /= "0000")
                 and ( (IDEX_rt = IFID_rs) or (IDEX_rt = IFID_rt) ))

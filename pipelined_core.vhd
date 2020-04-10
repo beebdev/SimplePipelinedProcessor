@@ -352,10 +352,7 @@ begin
                IDEX_rs              => sig_IDEX_rs,
                IDEX_rt              => sig_IDEX_rt,
                IDEX_rd              => sig_IDEX_rd );
-					
-				
-			
- 
+               
     ----------Execution-----------
     compare : comparator
     port map ( data_a   => sig_comp_in_a,
