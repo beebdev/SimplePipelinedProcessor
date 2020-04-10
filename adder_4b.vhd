@@ -21,7 +21,7 @@ architecture Behavioral of adder_4b is
     signal result : STD_LOGIC_VECTOR(4 downto 0);
 begin
 
-    result <= '0'&src_a + '0'&src_b;
+    result <= ('0'&src_a) + ('0'&src_b);
     sum <= result(3 downto 0);
     carry_out <= result(4);
     

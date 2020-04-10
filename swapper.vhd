@@ -106,8 +106,10 @@ begin
         out_b <= in_b;
         
         -- swap bits
-        out_a(to_integer(a_e) downto to_integer(a_s)) <= in_b(to_integer(b_e) downto to_integer(b_s));
-        out_b(to_integer(b_e) downto to_integer(b_s)) <= in_a(to_integer(a_e) downto to_integer(a_s));
+        if ((a_e - a_s) = (b_e - b_s)) then
+            out_a(to_integer(a_e) downto to_integer(a_s)) <= in_b(to_integer(b_e) downto to_integer(b_s));
+            out_b(to_integer(b_e) downto to_integer(b_s)) <= in_a(to_integer(a_e) downto to_integer(a_s));
+        end if;
     end process;
     
 end Behavioral;

@@ -7,6 +7,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity adder_32b is
@@ -21,7 +22,7 @@ architecture Behavioral of adder_32b is
     signal result : STD_LOGIC_VECTOR(32 downto 0);
 begin
 
-    result <= '0'&src_a + '0'&src_b;
+    result <= ('0'&src_a) + ('0'&src_b);
     sum <= result(31 downto 0);
     carry_out <= result(32);
 

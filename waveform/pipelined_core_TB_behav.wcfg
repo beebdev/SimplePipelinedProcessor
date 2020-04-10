@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="pipelined_core_TB_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="pipelined_core_TB" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="50000fs"></ZoomStartTime>
+      <ZoomEndTime time="144301fs"></ZoomEndTime>
+      <Cursor1Time time="87200fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="281"></NameColumnWidth>
+      <ValueColumnWidth column_width="84"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="18" />
+   <wvobject fp_name="/pipelined_core_TB/clk_period" type="other">
+      <obj_property name="ElementShortName">clk_period</obj_property>
+      <obj_property name="ObjectShortName">clk_period</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pipelined_core_TB/reset" type="logic">
+      <obj_property name="ElementShortName">reset</obj_property>
+      <obj_property name="ObjectShortName">reset</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pipelined_core_TB/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pipelined_core_TB/UTT/sig_curr_pc" type="array">
+      <obj_property name="ElementShortName">sig_curr_pc[3:0]</obj_property>
+      <obj_property name="ObjectShortName">sig_curr_pc[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pipelined_core_TB/UTT/sig_next_pc" type="array">
+      <obj_property name="ElementShortName">sig_next_pc[3:0]</obj_property>
+      <obj_property name="ObjectShortName">sig_next_pc[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="group402" type="group">
+      <obj_property name="label">Instruction Memory</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/pipelined_core_TB/UTT/insn_mem/addr_in" type="array">
+         <obj_property name="ElementShortName">addr_in[3:0]</obj_property>
+         <obj_property name="ObjectShortName">addr_in[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/insn_mem/insn_out" type="array">
+         <obj_property name="ElementShortName">insn_out[15:0]</obj_property>
+         <obj_property name="ObjectShortName">insn_out[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/insn_mem/sig_insn_mem" type="array">
+         <obj_property name="ElementShortName">sig_insn_mem[0:15][15:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_insn_mem[0:15][15:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group87" type="group">
+      <obj_property name="label">IFID_reg</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_IFID_insn" type="array">
+         <obj_property name="ElementShortName">sig_IFID_insn[15:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_IFID_insn[15:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group315" type="group">
+      <obj_property name="label">ctrl_unit_post_mux</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_reg_write_in" type="logic">
+         <obj_property name="ElementShortName">sig_reg_write_in</obj_property>
+         <obj_property name="ObjectShortName">sig_reg_write_in</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_write_dsrc_in" type="array">
+         <obj_property name="ElementShortName">sig_write_dsrc_in[1:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_write_dsrc_in[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_reg_dst_in" type="logic">
+         <obj_property name="ElementShortName">sig_reg_dst_in</obj_property>
+         <obj_property name="ObjectShortName">sig_reg_dst_in</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group319" type="group">
+      <obj_property name="label">data_in</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_read_data_a" type="array">
+         <obj_property name="ElementShortName">sig_read_data_a[31:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_read_data_a[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_read_data_b" type="array">
+         <obj_property name="ElementShortName">sig_read_data_b[31:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_read_data_b[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_sign_ext_offset" type="array">
+         <obj_property name="ElementShortName">sig_sign_ext_offset[31:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_sign_ext_offset[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group97" type="group">
+      <obj_property name="label">IDEX_reg</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_IDEX_reg_write" type="logic">
+         <obj_property name="ElementShortName">sig_IDEX_reg_write</obj_property>
+         <obj_property name="ObjectShortName">sig_IDEX_reg_write</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_IDEX_write_dsrc" type="array">
+         <obj_property name="ElementShortName">sig_IDEX_write_dsrc[1:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_IDEX_write_dsrc[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_IDEX_reg_dst" type="logic">
+         <obj_property name="ElementShortName">sig_IDEX_reg_dst</obj_property>
+         <obj_property name="ObjectShortName">sig_IDEX_reg_dst</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_IDEX_read_data_a" type="array">
+         <obj_property name="ElementShortName">sig_IDEX_read_data_a[31:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_IDEX_read_data_a[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_IDEX_read_data_b" type="array">
+         <obj_property name="ElementShortName">sig_IDEX_read_data_b[31:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_IDEX_read_data_b[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_IDEX_sign_ext_offset" type="array">
+         <obj_property name="ElementShortName">sig_IDEX_sign_ext_offset[31:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_IDEX_sign_ext_offset[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_IDEX_rs" type="array">
+         <obj_property name="ElementShortName">sig_IDEX_rs[3:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_IDEX_rs[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_IDEX_rt" type="array">
+         <obj_property name="ElementShortName">sig_IDEX_rt[3:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_IDEX_rt[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_IDEX_rd" type="array">
+         <obj_property name="ElementShortName">sig_IDEX_rd[3:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_IDEX_rd[3:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group427" type="group">
+      <obj_property name="label">comp</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/pipelined_core_TB/UTT/compare/data_a" type="array">
+         <obj_property name="ElementShortName">data_a[7:0]</obj_property>
+         <obj_property name="ObjectShortName">data_a[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/compare/data_b" type="array">
+         <obj_property name="ElementShortName">data_b[7:0]</obj_property>
+         <obj_property name="ObjectShortName">data_b[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/compare/eq" type="array">
+         <obj_property name="ElementShortName">eq[31:0]</obj_property>
+         <obj_property name="ObjectShortName">eq[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/compare/eq_buf" type="other">
+         <obj_property name="ElementShortName">eq_buf</obj_property>
+         <obj_property name="ObjectShortName">eq_buf</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group422" type="group">
+      <obj_property name="label">Tag_gen</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/D_in" type="array">
+         <obj_property name="ElementShortName">D_in[31:0]</obj_property>
+         <obj_property name="ObjectShortName">D_in[31:0]</obj_property>
+         <obj_property name="Reversed">false</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/control" type="array">
+         <obj_property name="ElementShortName">control[24:0]</obj_property>
+         <obj_property name="ObjectShortName">control[24:0]</obj_property>
+         <obj_property name="Reversed">false</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/tag_result" type="array">
+         <obj_property name="ElementShortName">tag_result[31:0]</obj_property>
+         <obj_property name="ObjectShortName">tag_result[31:0]</obj_property>
+         <obj_property name="Reversed">false</obj_property>
+      </wvobject>
+      <wvobject fp_name="group456" type="group">
+         <obj_property name="label">SWAPPER</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/swap_process/D0" type="array">
+            <obj_property name="ElementShortName">D0[7:0]</obj_property>
+            <obj_property name="ObjectShortName">D0[7:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/swap_process/D1" type="array">
+            <obj_property name="ElementShortName">D1[7:0]</obj_property>
+            <obj_property name="ObjectShortName">D1[7:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/swap_process/D2" type="array">
+            <obj_property name="ElementShortName">D2[7:0]</obj_property>
+            <obj_property name="ObjectShortName">D2[7:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/swap_process/D3" type="array">
+            <obj_property name="ElementShortName">D3[7:0]</obj_property>
+            <obj_property name="ObjectShortName">D3[7:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="group457" type="group">
+            <obj_property name="label">A</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/swap_process/A0" type="array">
+               <obj_property name="ElementShortName">A0[7:0]</obj_property>
+               <obj_property name="ObjectShortName">A0[7:0]</obj_property>
+               <obj_property name="Radix">BINARYRADIX</obj_property>
+            </wvobject>
+            <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/swap_process/A1" type="array">
+               <obj_property name="ElementShortName">A1[7:0]</obj_property>
+               <obj_property name="ObjectShortName">A1[7:0]</obj_property>
+               <obj_property name="Radix">BINARYRADIX</obj_property>
+            </wvobject>
+            <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/swap_process/A2" type="array">
+               <obj_property name="ElementShortName">A2[7:0]</obj_property>
+               <obj_property name="ObjectShortName">A2[7:0]</obj_property>
+               <obj_property name="Radix">BINARYRADIX</obj_property>
+            </wvobject>
+            <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/swap_process/A3" type="array">
+               <obj_property name="ElementShortName">A3[7:0]</obj_property>
+               <obj_property name="ObjectShortName">A3[7:0]</obj_property>
+               <obj_property name="Radix">BINARYRADIX</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/swap_process/b1" type="array">
+            <obj_property name="ElementShortName">b1[1:0]</obj_property>
+            <obj_property name="ObjectShortName">b1[1:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/swap_process/b2" type="array">
+            <obj_property name="ElementShortName">b2[1:0]</obj_property>
+            <obj_property name="ObjectShortName">b2[1:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/swap_process/p1" type="array">
+            <obj_property name="ElementShortName">p1[2:0]</obj_property>
+            <obj_property name="ObjectShortName">p1[2:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/swap_process/p2" type="array">
+            <obj_property name="ElementShortName">p2[2:0]</obj_property>
+            <obj_property name="ObjectShortName">p2[2:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/swap_process/s" type="array">
+            <obj_property name="ElementShortName">s[2:0]</obj_property>
+            <obj_property name="ObjectShortName">s[2:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/swap_process/in_a" type="array">
+            <obj_property name="ElementShortName">in_a[7:0]</obj_property>
+            <obj_property name="ObjectShortName">in_a[7:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/swap_process/in_b" type="array">
+            <obj_property name="ElementShortName">in_b[7:0]</obj_property>
+            <obj_property name="ObjectShortName">in_b[7:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/swap_process/out_a" type="array">
+            <obj_property name="ElementShortName">out_a[7:0]</obj_property>
+            <obj_property name="ObjectShortName">out_a[7:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/swap_process/out_b" type="array">
+            <obj_property name="ElementShortName">out_b[7:0]</obj_property>
+            <obj_property name="ObjectShortName">out_b[7:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/swap_process/a_s" type="array">
+            <obj_property name="ElementShortName">a_s[2:0]</obj_property>
+            <obj_property name="ObjectShortName">a_s[2:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/swap_process/a_e" type="array">
+            <obj_property name="ElementShortName">a_e[2:0]</obj_property>
+            <obj_property name="ObjectShortName">a_e[2:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/swap_process/b_s" type="array">
+            <obj_property name="ElementShortName">b_s[2:0]</obj_property>
+            <obj_property name="ObjectShortName">b_s[2:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/swap_process/b_e" type="array">
+            <obj_property name="ElementShortName">b_e[2:0]</obj_property>
+            <obj_property name="ObjectShortName">b_e[2:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/swap_process/size" type="array">
+            <obj_property name="ElementShortName">size[2:0]</obj_property>
+            <obj_property name="ObjectShortName">size[2:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/r0" type="array">
+         <obj_property name="ElementShortName">r0[2:0]</obj_property>
+         <obj_property name="ObjectShortName">r0[2:0]</obj_property>
+         <obj_property name="Reversed">false</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/r1" type="array">
+         <obj_property name="ElementShortName">r1[2:0]</obj_property>
+         <obj_property name="ObjectShortName">r1[2:0]</obj_property>
+         <obj_property name="Reversed">false</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/r2" type="array">
+         <obj_property name="ElementShortName">r2[2:0]</obj_property>
+         <obj_property name="ObjectShortName">r2[2:0]</obj_property>
+         <obj_property name="Reversed">false</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/r3" type="array">
+         <obj_property name="ElementShortName">r3[2:0]</obj_property>
+         <obj_property name="ObjectShortName">r3[2:0]</obj_property>
+         <obj_property name="Reversed">false</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/A0" type="array">
+         <obj_property name="ElementShortName">A0[7:0]</obj_property>
+         <obj_property name="ObjectShortName">A0[7:0]</obj_property>
+         <obj_property name="Reversed">false</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/A1" type="array">
+         <obj_property name="ElementShortName">A1[7:0]</obj_property>
+         <obj_property name="ObjectShortName">A1[7:0]</obj_property>
+         <obj_property name="Reversed">false</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/A2" type="array">
+         <obj_property name="ElementShortName">A2[7:0]</obj_property>
+         <obj_property name="ObjectShortName">A2[7:0]</obj_property>
+         <obj_property name="Reversed">false</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/A3" type="array">
+         <obj_property name="ElementShortName">A3[7:0]</obj_property>
+         <obj_property name="ObjectShortName">A3[7:0]</obj_property>
+         <obj_property name="Reversed">false</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/B0" type="array">
+         <obj_property name="ElementShortName">B0[7:0]</obj_property>
+         <obj_property name="ObjectShortName">B0[7:0]</obj_property>
+         <obj_property name="Reversed">false</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/B1" type="array">
+         <obj_property name="ElementShortName">B1[7:0]</obj_property>
+         <obj_property name="ObjectShortName">B1[7:0]</obj_property>
+         <obj_property name="Reversed">false</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/B2" type="array">
+         <obj_property name="ElementShortName">B2[7:0]</obj_property>
+         <obj_property name="ObjectShortName">B2[7:0]</obj_property>
+         <obj_property name="Reversed">false</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/tag_gen/B3" type="array">
+         <obj_property name="ElementShortName">B3[7:0]</obj_property>
+         <obj_property name="ObjectShortName">B3[7:0]</obj_property>
+         <obj_property name="Reversed">false</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group433" type="group">
+      <obj_property name="label">alu</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/pipelined_core_TB/UTT/alu/src_a" type="array">
+         <obj_property name="ElementShortName">src_a[31:0]</obj_property>
+         <obj_property name="ObjectShortName">src_a[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/alu/src_b" type="array">
+         <obj_property name="ElementShortName">src_b[31:0]</obj_property>
+         <obj_property name="ObjectShortName">src_b[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/alu/sum" type="array">
+         <obj_property name="ElementShortName">sum[31:0]</obj_property>
+         <obj_property name="ObjectShortName">sum[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/alu/carry_out" type="logic">
+         <obj_property name="ElementShortName">carry_out</obj_property>
+         <obj_property name="ObjectShortName">carry_out</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/alu/result" type="array">
+         <obj_property name="ElementShortName">result[32:0]</obj_property>
+         <obj_property name="ObjectShortName">result[32:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group104" type="group">
+      <obj_property name="label">EXMEM_reg</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_EXMEM_reg_write" type="logic">
+         <obj_property name="ElementShortName">sig_EXMEM_reg_write</obj_property>
+         <obj_property name="ObjectShortName">sig_EXMEM_reg_write</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_EXMEM_write_dsrc" type="array">
+         <obj_property name="ElementShortName">sig_EXMEM_write_dsrc[1:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_EXMEM_write_dsrc[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_EXMEM_comp_result" type="array">
+         <obj_property name="ElementShortName">sig_EXMEM_comp_result[31:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_EXMEM_comp_result[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_EXMEM_tag_result" type="array">
+         <obj_property name="ElementShortName">sig_EXMEM_tag_result[31:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_EXMEM_tag_result[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_EXMEM_alu_result" type="array">
+         <obj_property name="ElementShortName">sig_EXMEM_alu_result[31:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_EXMEM_alu_result[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_EXMEM_reg_write_dst" type="array">
+         <obj_property name="ElementShortName">sig_EXMEM_reg_write_dst[3:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_EXMEM_reg_write_dst[3:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group112" type="group">
+      <obj_property name="label">MEMWB_reg</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_WB_reg_write" type="logic">
+         <obj_property name="ElementShortName">sig_WB_reg_write</obj_property>
+         <obj_property name="ObjectShortName">sig_WB_reg_write</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_WB_write_dsrc" type="array">
+         <obj_property name="ElementShortName">sig_WB_write_dsrc[1:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_WB_write_dsrc[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_MEMWB_comp_result" type="array">
+         <obj_property name="ElementShortName">sig_MEMWB_comp_result[31:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_MEMWB_comp_result[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_MEMWB_tag_result" type="array">
+         <obj_property name="ElementShortName">sig_MEMWB_tag_result[31:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_MEMWB_tag_result[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_MEMWB_dmem_read_data" type="array">
+         <obj_property name="ElementShortName">sig_MEMWB_dmem_read_data[31:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_MEMWB_dmem_read_data[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_WB_reg_write_dst" type="array">
+         <obj_property name="ElementShortName">sig_WB_reg_write_dst[3:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_WB_reg_write_dst[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_WB_data" type="array">
+         <obj_property name="ElementShortName">sig_WB_data[31:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_WB_data[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group118" type="group">
+      <obj_property name="label">Forwarding Unit</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_comp_sel_a" type="array">
+         <obj_property name="ElementShortName">sig_comp_sel_a[1:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_comp_sel_a[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_comp_sel_b" type="array">
+         <obj_property name="ElementShortName">sig_comp_sel_b[1:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_comp_sel_b[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_tag_sel_a" type="logic">
+         <obj_property name="ElementShortName">sig_tag_sel_a</obj_property>
+         <obj_property name="ObjectShortName">sig_tag_sel_a</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_tag_sel_b" type="logic">
+         <obj_property name="ElementShortName">sig_tag_sel_b</obj_property>
+         <obj_property name="ObjectShortName">sig_tag_sel_b</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_alu_sel_a" type="logic">
+         <obj_property name="ElementShortName">sig_alu_sel_a</obj_property>
+         <obj_property name="ObjectShortName">sig_alu_sel_a</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group121" type="group">
+      <obj_property name="label">Hazard Unit</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_stall" type="logic">
+         <obj_property name="ElementShortName">sig_stall</obj_property>
+         <obj_property name="ObjectShortName">sig_stall</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_pcwrite" type="logic">
+         <obj_property name="ElementShortName">sig_pcwrite</obj_property>
+         <obj_property name="ObjectShortName">sig_pcwrite</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_IFID_write" type="logic">
+         <obj_property name="ElementShortName">sig_IFID_write</obj_property>
+         <obj_property name="ObjectShortName">sig_IFID_write</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/hazard_detection_unit/IDEX_write_dsrc" type="array">
+         <obj_property name="ElementShortName">IDEX_write_dsrc[1:0]</obj_property>
+         <obj_property name="ObjectShortName">IDEX_write_dsrc[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/hazard_detection_unit/IDEX_rt" type="array">
+         <obj_property name="ElementShortName">IDEX_rt[3:0]</obj_property>
+         <obj_property name="ObjectShortName">IDEX_rt[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/hazard_detection_unit/EXMEM_write_dsrc" type="array">
+         <obj_property name="ElementShortName">EXMEM_write_dsrc[1:0]</obj_property>
+         <obj_property name="ObjectShortName">EXMEM_write_dsrc[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/hazard_detection_unit/EXMEM_rt" type="array">
+         <obj_property name="ElementShortName">EXMEM_rt[3:0]</obj_property>
+         <obj_property name="ObjectShortName">EXMEM_rt[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/hazard_detection_unit/IFID_rs" type="array">
+         <obj_property name="ElementShortName">IFID_rs[3:0]</obj_property>
+         <obj_property name="ObjectShortName">IFID_rs[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/hazard_detection_unit/IFID_rt" type="array">
+         <obj_property name="ElementShortName">IFID_rt[3:0]</obj_property>
+         <obj_property name="ObjectShortName">IFID_rt[3:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group311" type="group">
+      <obj_property name="label">reg_file[0-8]</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_WB_reg_write" type="logic">
+         <obj_property name="ElementShortName">sig_WB_reg_write</obj_property>
+         <obj_property name="ObjectShortName">sig_WB_reg_write</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_WB_reg_write_dst" type="array">
+         <obj_property name="ElementShortName">sig_WB_reg_write_dst[3:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_WB_reg_write_dst[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/sig_WB_data" type="array">
+         <obj_property name="ElementShortName">sig_WB_data[31:0]</obj_property>
+         <obj_property name="ObjectShortName">sig_WB_data[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/reg_file/sig_regfile[0]" type="array">
+         <obj_property name="ElementShortName">[0][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[0][31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/reg_file/sig_regfile[1]" type="array">
+         <obj_property name="ElementShortName">[1][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[1][31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/reg_file/sig_regfile[2]" type="array">
+         <obj_property name="ElementShortName">[2][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[2][31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/reg_file/sig_regfile[3]" type="array">
+         <obj_property name="ElementShortName">[3][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[3][31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/reg_file/sig_regfile[4]" type="array">
+         <obj_property name="ElementShortName">[4][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[4][31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/reg_file/sig_regfile[5]" type="array">
+         <obj_property name="ElementShortName">[5][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[5][31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/reg_file/sig_regfile[6]" type="array">
+         <obj_property name="ElementShortName">[6][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[6][31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/pipelined_core_TB/UTT/reg_file/sig_regfile[7]" type="array">
+         <obj_property name="ElementShortName">[7][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[7][31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>

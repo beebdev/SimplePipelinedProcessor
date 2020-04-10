@@ -31,22 +31,22 @@ begin
         
         if (reset = '1') then
             -- initial values of the data memory : reset to zero 
-            var_data_mem(0)  := (others => '0');
-            var_data_mem(1)  := (others => '0');
-            var_data_mem(2)  := (others => '0');
-            var_data_mem(3)  := (others => '0');
-            var_data_mem(4)  := (others => '0');
-            var_data_mem(5)  := (others => '0');
-            var_data_mem(6)  := (others => '0');
-            var_data_mem(7)  := (others => '0');
-            var_data_mem(8)  := (others => '0');
-            var_data_mem(9)  := (others => '0');
-            var_data_mem(10) := (others => '0');
-            var_data_mem(11) := (others => '0');
-            var_data_mem(12) := (others => '0');
-            var_data_mem(13) := (others => '0');
-            var_data_mem(14) := (others => '0');
-            var_data_mem(15) := (others => '0');
+            var_data_mem(0)  := X"504D4F43";
+            var_data_mem(1)  := X"000000E4";
+            var_data_mem(2)  := X"01842A26";
+            var_data_mem(3)  := X"00000000";
+            var_data_mem(4)  := X"00000000";
+            var_data_mem(5)  := X"00000000";
+            var_data_mem(6)  := X"00000000";
+            var_data_mem(7)  := X"00000000";
+            var_data_mem(8)  := X"00000000";
+            var_data_mem(9)  := X"00000000";
+            var_data_mem(10) := X"00000000";
+            var_data_mem(11) := X"00000000";
+            var_data_mem(12) := X"00000000";
+            var_data_mem(13) := X"00000000";
+            var_data_mem(14) := X"00000000";
+            var_data_mem(15) := X"00000000";
         end if;
        
         -- continuous read of the memory location given by var_addr 

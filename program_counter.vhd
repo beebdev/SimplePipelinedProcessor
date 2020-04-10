@@ -26,7 +26,7 @@ begin
     begin
        if (reset = '1') then
            addr_out <= (others => '0'); 
-       elsif (rising_edge(clk)) and pcwrite = '0' then
+       elsif (rising_edge(clk) and pcwrite = '1') then
            addr_out <= addr_in; 
        end if;
     end process;

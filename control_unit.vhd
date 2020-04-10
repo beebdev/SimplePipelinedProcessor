@@ -31,7 +31,7 @@ begin
                   "10" when opcode = OP_LOAD else
                   (others => 'X');
                  
-    reg_dst <= '0' when (opcode = OP_CMP or opcode = OP_TAG) else
-               '1';
+    reg_dst <= '1' when (opcode = OP_CMP or opcode = OP_TAG) else
+               '0';
                
 end Behavioral;
